@@ -1,13 +1,11 @@
 #!/bin/bash
 
-cd WebEZ-core
+cd Webz-core
 npm run doc
 npm run deploy-cover
-cd ../WebEZ-Example
+cd ../examples/webz-task/
 npm run build
-cd ../web-pong
+cd ../webz-pong
 npm run build
-cd ../lander
-npm run build
-cd ../movies
+cd ../webz-lander
 npm run build

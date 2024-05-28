@@ -1,17 +1,18 @@
 /******/ (() => { // webpackBootstrap
 /******/ 	var __webpack_modules__ = ({
 
-/***/ "./node_modules/@gsilber/webez/EzComponent.js":
-/*!****************************************************!*\
-  !*** ./node_modules/@gsilber/webez/EzComponent.js ***!
-  \****************************************************/
+/***/ "./node_modules/@boots-edu/webz/WebzComponent.js":
+/*!*******************************************************!*\
+  !*** ./node_modules/@boots-edu/webz/WebzComponent.js ***!
+  \*******************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.EzComponent = exports.HttpMethod = void 0;
-const eventsubject_1 = __webpack_require__(/*! ./eventsubject */ "./node_modules/@gsilber/webez/eventsubject.js");
+exports.WebzComponent = exports.HttpMethod = void 0;
+const WebzRouter_1 = __webpack_require__(/*! ./WebzRouter */ "./node_modules/@boots-edu/webz/WebzRouter.js");
+const eventsubject_1 = __webpack_require__(/*! ./eventsubject */ "./node_modules/@boots-edu/webz/eventsubject.js");
 /**
  * @description An enum for the HTTP methods
  * @export
@@ -32,38 +33,42 @@ var HttpMethod;
  * @export
  * @group Abstract Superclasses
  * @abstract
- * @class EzComponent
- * @example class MyComponent extends EzComponent {
+ * @class WebzComponent
+ * @example class MyComponent extends WebzComponent {
  *   constructor() {
  *     super("<h1>Hello World</h1>", "h1{color:red;}");
  *   }
  * }
  */
-class EzComponent {
+class WebzComponent {
     /**
      * @description An event that fires when the window is resized
      * @readonly
      * @type {EventSubject<SizeInfo>}
-     * @memberof EzComponent
+     * @memberof WebzComponent
      * @example this.onResizeEvent.subscribe((sizeInfo) => {
      *  console.log(sizeInfo.windowWidth);
      *  console.log(sizeInfo.windowHeight);
      * });
      */
     get onResizeEvent() {
-        return EzComponent.resizeEvent;
+        return WebzComponent.resizeEvent;
     }
     /**
-     * @description Creates an instance of EzComponent.
+     * @description Creates an instance of WebzComponent.
      * @param {string} [html=""] The html as a string to be used as the body of this component
      * @param {string} [css=""] The css as a string to be used as the style of this component
-     * @memberof EzComponent
+     * @memberof WebzComponent
      * @public
      * @constructor
      */
     constructor(html, css) {
         this.html = html;
         this.css = css;
+        /**
+         * @hidden
+         */
+        this.router = null;
         this.htmlElement = window.document.createElement("div");
         this.shadow = this.htmlElement.attachShadow({ mode: "open" });
         this.template = window.document.createElement("template");
@@ -84,7 +89,7 @@ class EzComponent {
         this.shadow.appendChild(this.template.content.cloneNode(true));
         if (!window.onresize) {
             window.onresize = () => {
-                EzComponent.resizeEvent.next({
+                WebzComponent.resizeEvent.next({
                     windowWidth: window.innerWidth,
                     windowHeight: window.innerHeight,
                 });
@@ -96,7 +101,7 @@ class EzComponent {
      * @param component The component to add
      * @param id The id of the element to append the component to (optional)
      * @returns void
-     * @memberof EzComponent
+     * @memberof WebzComponent
      * @example
      *   component.addComponent(childComponent);
      *   component.addComponent(childComponent, "myDiv");
@@ -130,10 +135,24 @@ class EzComponent {
         }
     }
     /**
+     * @description Add a router to the component
+     * @param router The router to add
+     * @param id The id of the element to append the router to (optional)
+     * @returns the router
+     * @memberof WebzComponent
+     * @example component.addRouter(router);
+     */
+    addRouter(routes, id = "root") {
+        if (this.router)
+            throw new Error("A router has already been added to this component");
+        this.router = new WebzRouter_1.WebzRouter(this, routes, id);
+        this.router.route(window.location.pathname);
+    }
+    /**
      * @description Remove a component from the dom
      * @param component
-     * @returns EzComponent
-     * @memberof EzComponent
+     * @returns WebzComponent
+     * @memberof WebzComponent
      * @example
      * component.addComponent(childComponent);
      * component.removeComponent(childComponent);
@@ -146,7 +165,7 @@ class EzComponent {
      * @description Append the component to a dom element
      * @param domElement
      * @returns void
-     * @memberof EzComponent
+     * @memberof WebzComponent
      * @example component.appendToDomElement(document.getElementById("myDiv"));
      */
     appendToDomElement(domElement) {
@@ -159,7 +178,7 @@ class EzComponent {
      * @param {Headers} headers The headers to send with the request (optional)
      * @param {T} data The data to send in the request body (optional)
      * @returns {Promise<T>} A promise that resolves with the response data
-     * @memberof EzComponent
+     * @memberof WebzComponent
      * @static
      * @example myComponent.ajax("https://some.api.url.com/posts", HttpMethod.GET)
      *  .subscribe((data) => {
@@ -195,7 +214,7 @@ class EzComponent {
     /**
      * @description Get the size of the window
      * @returns {SizeInfo} The size of the window
-     * @memberof EzComponent
+     * @memberof WebzComponent
      * @example const sizeInfo: SizeInfo = myComponent.getWindowSize();
      */
     getWindowSize() {
@@ -245,24 +264,24 @@ class EzComponent {
             throw new Error("Element does not have a value property");
     }
 }
-exports.EzComponent = EzComponent;
-EzComponent.resizeEvent = new eventsubject_1.EventSubject();
+exports.WebzComponent = WebzComponent;
+WebzComponent.resizeEvent = new eventsubject_1.EventSubject();
 
 
 /***/ }),
 
-/***/ "./node_modules/@gsilber/webez/EzDialog.js":
-/*!*************************************************!*\
-  !*** ./node_modules/@gsilber/webez/EzDialog.js ***!
-  \*************************************************/
+/***/ "./node_modules/@boots-edu/webz/WebzDialog.js":
+/*!****************************************************!*\
+  !*** ./node_modules/@boots-edu/webz/WebzDialog.js ***!
+  \****************************************************/
 /***/ ((__unused_webpack_module, exports, __webpack_require__) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.EzDialog = exports.popupDialog = void 0;
-const EzComponent_1 = __webpack_require__(/*! ./EzComponent */ "./node_modules/@gsilber/webez/EzComponent.js");
-const eventsubject_1 = __webpack_require__(/*! ./eventsubject */ "./node_modules/@gsilber/webez/eventsubject.js");
+exports.WebzDialog = exports.popupDialog = void 0;
+const WebzComponent_1 = __webpack_require__(/*! ./WebzComponent */ "./node_modules/@boots-edu/webz/WebzComponent.js");
+const eventsubject_1 = __webpack_require__(/*! ./eventsubject */ "./node_modules/@boots-edu/webz/eventsubject.js");
 /** @hidden */
 exports.popupDialog = undefined;
 const alertDialogTempalte = `
@@ -332,20 +351,20 @@ const popupTemplate = `
 /**
  * @description A dialog component that can be used to create a popup dialog
  * @export
- * @class EzDialog
+ * @class WebzDialog
  * @group Abstract Superclasses
- * @extends {EzComponent}
- * @example const dialog = new EzDialog("<h1>Hello World</h1>", "h1{color:red;}");
+ * @extends {WebzComponent}
+ * @example const dialog = new WebzDialog("<h1>Hello World</h1>", "h1{color:red;}");
  */
-class EzDialog extends EzComponent_1.EzComponent {
+class WebzDialog extends WebzComponent_1.WebzComponent {
     /**
-     * @description Creates an instance of EzComponent.
+     * @description Creates an instance of WebzDialog.
      * @param {string} [html=""] The html as a string to be used as the body of this component
      * @param {string} [css=""] The css as a string to be used as the style of this component
-     * @memberof EzComponent
+     * @memberof WebzDialog
      * @public
      * @constructor
-     * @example const dlg = new EzDialog("<h1>Hello World</h1>", "h1{color:red;}");
+     * @example const dlg = new WebzDialog("<h1>Hello World</h1>", "h1{color:red;}");
      */
     constructor(html = "", css = "") {
         super(html, css);
@@ -370,7 +389,7 @@ class EzDialog extends EzComponent_1.EzComponent {
      * @description Show or hide the dialog
      * @param {boolean} [show=true] Show or hide the dialog
      * @returns void
-     * @memberof EzDialog
+     * @memberof WebzDialog
      * @example
      * const dialog = new MyDialog();
      * dialog.show();
@@ -399,15 +418,15 @@ class EzDialog extends EzComponent_1.EzComponent {
     /**
      * @description Show a popup dialog
      * @static
-     * @param {EzComponent} attachTo The component to attach the dialog to
+     * @param {WebzComponent} attachTo The component to attach the dialog to
      * @param {string} message The message to display
      * @param {string} [title="Alert"] The title of the dialog
      * @param {string[]} [buttons=["Ok"]] The buttons to display
      * @param {string} [btnClass=""] The class to apply to the buttons
      * @returns {EventSubject<string>} The event subject that is triggered when the dialog is closed
-     * @memberof EzDialog
+     * @memberof WebzDialog
      * @example
-     * EzDialog.popup("Hello World", "Alert", ["Ok","Cancel"], "btn btn-primary")
+     * WebzDialog.popup("Hello World", "Alert", ["Ok","Cancel"], "btn btn-primary")
      *    .subscribe((value:string) => {
      *       if (value === "Ok") console.log("Ok was clicked");
      *       else console.log("Cancel was clicked");
@@ -416,7 +435,7 @@ class EzDialog extends EzComponent_1.EzComponent {
      *
      */
     static popup(attachTo, message, title = "Alert", buttons = ["Ok"], btnClass = "") {
-        const dialog = new EzDialog(alertDialogTempalte);
+        const dialog = new WebzDialog(alertDialogTempalte);
         exports.popupDialog = dialog;
         let titleEl = dialog["shadow"].getElementById("title");
         if (titleEl)
@@ -450,22 +469,68 @@ class EzDialog extends EzComponent_1.EzComponent {
         return dialog.closeEvent;
     }
 }
-exports.EzDialog = EzDialog;
-EzDialog.popupButtons = [];
+exports.WebzDialog = WebzDialog;
+WebzDialog.popupButtons = [];
 
 
 /***/ }),
 
-/***/ "./node_modules/@gsilber/webez/bind.decorators.js":
-/*!********************************************************!*\
-  !*** ./node_modules/@gsilber/webez/bind.decorators.js ***!
-  \********************************************************/
+/***/ "./node_modules/@boots-edu/webz/WebzRouter.js":
+/*!****************************************************!*\
+  !*** ./node_modules/@boots-edu/webz/WebzRouter.js ***!
+  \****************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.BindStyleToNumberAppendPx = exports.BindStyleToNumber = exports.BindValueToNumber = exports.BindCheckedToBoolean = exports.BindVisibleToBoolean = exports.BindDisabledToBoolean = exports.BindCSSClassToBoolean = exports.BindAttribute = exports.BindValue = exports.BindCSSClass = exports.BindStyle = void 0;
+exports.WebzRouter = void 0;
+class WebzRouter {
+    constructor(container, routes, id) {
+        this.container = container;
+        this.routes = routes;
+        this.id = id;
+        this.baseRoute = URLHREF || "";
+        this.currentComponent = null;
+        this.selectedPage = 0;
+        this.route(window.location.pathname.replace(this.baseRoute, ""));
+    }
+    selectedRoute() {
+        return this.selectedPage;
+    }
+    route(path) {
+        const route = this.routes.find((r) => r.path === path);
+        if (route) {
+            this.selectedPage = this.routes.indexOf(route);
+            if (this.currentComponent)
+                this.container["removeComponent"](this.currentComponent);
+            this.currentComponent = route.component;
+            if (this.id === "root") {
+                this.container.addComponent(route.component);
+            }
+            else {
+                this.container.addComponent(route.component, this.id);
+            }
+            window.history.pushState({}, "", this.baseRoute + path);
+        }
+    }
+}
+exports.WebzRouter = WebzRouter;
+
+
+/***/ }),
+
+/***/ "./node_modules/@boots-edu/webz/bind.decorators.js":
+/*!*********************************************************!*\
+  !*** ./node_modules/@boots-edu/webz/bind.decorators.js ***!
+  \*********************************************************/
+/***/ ((__unused_webpack_module, exports, __webpack_require__) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.BindStyleToNumberAppendPx = exports.BindStyleToNumber = exports.BindValueToNumber = exports.BindCheckedToBoolean = exports.BindVisibleToBoolean = exports.BindDisabledToBoolean = exports.BindCSSClassToBoolean = exports.BindList = exports.BindAttribute = exports.BindValue = exports.BindCSSClass = exports.BindStyle = void 0;
+const eventsubject_1 = __webpack_require__(/*! ./eventsubject */ "./node_modules/@boots-edu/webz/eventsubject.js");
 /**
  * @description Gets the public key of the field name
  * @param name the name of the field
@@ -558,6 +623,157 @@ function getPropertyDescriptor(target, key) {
         throw new Error(`can not find setter with name: ${key}`);
     }
     return origDescriptor;
+}
+/**
+ * @description Returns true if the element has a value attribute
+ * @param element the element to check
+ * @returns boolean
+ * @ignore
+ */
+function elementHasValue(element) {
+    return (element instanceof HTMLInputElement ||
+        element instanceof HTMLTextAreaElement ||
+        element instanceof HTMLSelectElement ||
+        element instanceof HTMLOptionElement ||
+        element instanceof HTMLButtonElement);
+}
+function walkDOM(element, clone, func) {
+    func(element, clone); // Process the current node
+    // Recurse into child nodes
+    element = element.firstChild;
+    clone = clone.firstChild;
+    // eslint-disable-next-line @typescript-eslint/no-unnecessary-condition
+    while (element) {
+        walkDOM(element, clone, func);
+        element = element.nextSibling;
+        clone = clone.nextSibling;
+    }
+}
+/**
+ * @description Clones the event listeners from the element to the clone
+ * @param element the element to clone the event listeners from
+ * @param clone the element to clone the event listeners to
+ * @ignore
+ */
+function cloneEventListeners(element, clone) {
+    const listeners = ["change", "input", "blur", "click"];
+    listeners.forEach((listener) => {
+        walkDOM(element, clone, (el, cl) => {
+            cl.addEventListener(listener, (e) => {
+                if (elementHasValue(el)) {
+                    el.value = e.target.value;
+                }
+                if (element instanceof HTMLButtonElement)
+                    element.innerHTML = e.target.innerHTML;
+                if (element instanceof HTMLOptionElement)
+                    element.text = e.target.text;
+                el.dispatchEvent(new Event(listener));
+            });
+        });
+    });
+}
+/**
+ * @description Recreates the set of elements bound to the array by duplicating the element parameter for each element in the array
+ * @param arr the array of values to bind to the elements
+ * @param element the element to duplicate for each element in the array
+ * @param overwrite if true, the innerHTML of the element will be replaced with the value in the array, otherwise the value will be set as the value of the element
+ * @param listItemId an array of ids of the elements to set the value of in the list item
+ * @returns void
+ * @ignore
+ */
+function recreateBoundList(arr, element, overwrite, listItemId) {
+    var _a, _b;
+    //hide current element
+    element.style.display = "none";
+    const sibs = [];
+    let n = (_a = element.parentElement) === null || _a === void 0 ? void 0 : _a.firstChild;
+    for (; n; n = n.nextSibling) {
+        if (n.nodeType === 1 && n !== element)
+            sibs.push(n);
+    }
+    if (sibs.length > arr.length) {
+        //remove extra siblings
+        sibs.slice(arr.length).forEach((v) => {
+            v.remove();
+        });
+    }
+    else if (sibs.length < arr.length) {
+        //add the extra siblings
+        for (let i = sibs.length; i < arr.length; i++) {
+            let clone = element.cloneNode(true);
+            for (let id of listItemId) {
+                const el = clone.querySelector(`#${id}`);
+                if (el && elementHasValue(el)) {
+                    el.value = arr[i];
+                }
+                else if (el) {
+                    el.innerHTML = arr[i];
+                }
+            }
+            cloneEventListeners(element, clone);
+            sibs.push(clone);
+            (_b = element.parentElement) === null || _b === void 0 ? void 0 : _b.appendChild(clone);
+        }
+    }
+    //replace the value of the siblings with the value in the array
+    arr.forEach((v, i) => {
+        sibs[i].style.display = element.getAttribute("original-display") || "";
+        if (sibs[i] instanceof HTMLOptionElement) {
+            sibs[i].value = v;
+            sibs[i].text = v;
+        }
+        else if (element instanceof HTMLButtonElement) {
+            sibs[i].innerHTML = v;
+            sibs[i].value = v;
+        }
+        else if (elementHasValue(sibs[i]))
+            sibs[i].value = v;
+        else if (overwrite)
+            sibs[i].innerHTML = v;
+    });
+}
+const boundProxyRebuild = new eventsubject_1.EventSubject();
+/**
+ * @description Creates a proxy object that will update the bound list when the array is modified
+ * @param array the array to proxy
+ * @param element the element to bind the array to
+ * @returns Proxy
+ * @ignore
+ */
+function boundProxyFactory(array) {
+    return new Proxy(array, {
+        set(target, prop, value) {
+            if (prop !== "length") {
+                target[prop] = value;
+                boundProxyRebuild.next();
+                //recreateBoundList(target, element);
+            }
+            return true;
+        },
+        get(target, prop) {
+            let ops = [
+                "fill",
+                "copyWithin",
+                "push",
+                "pop",
+                "reverse",
+                "shift",
+                "slice",
+                "sort",
+                "splice",
+                "unshift",
+            ];
+            if (ops.indexOf(prop) !== -1) {
+                const origMethod = target[prop];
+                return function (...args) {
+                    origMethod.apply(target, args);
+                    boundProxyRebuild.next();
+                    //recreateBoundList(target, element);
+                };
+            }
+            return target[prop];
+        },
+    });
 }
 // Actual implementation, should not be in documentation as the overloads capture the two cases
 /**@ignore */
@@ -665,56 +881,54 @@ function BindValue(id, transform = (value) => value) {
             const publicKey = getPublicKey(context.name);
             const origDescriptor = getPropertyDescriptor(this, publicKey);
             const value = context.access.get(this);
-            if (value !== undefined) {
-                if (element instanceof HTMLInputElement)
+            if (element instanceof HTMLOptionElement) {
+                element.value = transform.call(this, value);
+                element.text = transform.call(this, value);
+            }
+            else if (element instanceof HTMLButtonElement) {
+                element.innerHTML = transform.call(this, value);
+                element.value = transform.call(this, value);
+            }
+            else if (value !== undefined) {
+                if (elementHasValue(element))
                     element.value = transform.call(this, value);
-                else if (element instanceof HTMLTextAreaElement)
-                    element.value = transform.call(this, value);
-                else if (element instanceof HTMLSelectElement)
-                    element.value = transform.call(this, value);
-                else if (element instanceof HTMLOptionElement) {
-                    element.value = transform.call(this, value);
-                    element.text = transform.call(this, value);
-                }
                 else
                     element.innerHTML = transform.call(this, value);
             }
             if (origDescriptor.set) {
                 hookPropertySetter(this, context.name, origDescriptor, (value) => {
-                    if (element instanceof HTMLInputElement)
-                        element.value =
-                            transform.call(this, value);
-                    else if (element instanceof HTMLTextAreaElement)
-                        element.value =
-                            transform.call(this, value);
-                    else if (element instanceof HTMLSelectElement)
-                        element.value =
-                            transform.call(this, value);
-                    else if (element instanceof HTMLOptionElement) {
+                    if (element instanceof HTMLOptionElement) {
                         element.value =
                             transform.call(this, value);
                         element.text = transform.call(this, value);
                     }
+                    else if (element instanceof HTMLButtonElement) {
+                        element.innerHTML =
+                            transform.call(this, value);
+                        element.value = transform.call(this, value);
+                    }
+                    else if (elementHasValue(element))
+                        element.value =
+                            transform.call(this, value);
                     else
                         element.innerHTML = transform.call(this, value);
                 });
             }
             else {
                 hookProperty(this, context.name, value, (value) => {
-                    if (element instanceof HTMLInputElement)
-                        element.value =
-                            transform.call(this, value);
-                    else if (element instanceof HTMLTextAreaElement)
-                        element.value =
-                            transform.call(this, value);
-                    else if (element instanceof HTMLSelectElement)
-                        element.value =
-                            transform.call(this, value);
-                    else if (element instanceof HTMLOptionElement) {
+                    if (element instanceof HTMLOptionElement) {
                         element.value =
                             transform.call(this, value);
                         element.text = transform.call(this, value);
                     }
+                    else if (element instanceof HTMLButtonElement) {
+                        element.innerHTML =
+                            transform.call(this, value);
+                        element.value = transform.call(this, value);
+                    }
+                    else if (elementHasValue(element))
+                        element.value =
+                            transform.call(this, value);
                     else
                         element.innerHTML = transform.call(this, value);
                 });
@@ -736,10 +950,23 @@ function BindAttribute(id, attribute, transform = (value) => value) {
             const value = context.access.get(this);
             let setfn;
             setfn = (value) => {
-                if (transform.call(this, value) !== "")
-                    element.setAttribute(attribute, transform.call(this, value));
-                else
-                    element.removeAttribute(attribute);
+                let val = transform.call(this, value);
+                if (val !== "") {
+                    if (attribute === "checked") {
+                        element.checked = true;
+                    }
+                    else {
+                        element.setAttribute(attribute, val);
+                    }
+                }
+                else {
+                    if (attribute === "checked") {
+                        element.checked = false;
+                    }
+                    else {
+                        element.removeAttribute(attribute);
+                    }
+                }
             };
             if (value !== undefined)
                 setfn(value);
@@ -753,6 +980,46 @@ function BindAttribute(id, attribute, transform = (value) => value) {
     };
 }
 exports.BindAttribute = BindAttribute;
+//implementation
+function BindList(id, transform = (value) => value, replaceInnerHtml = true, listItemId = []) {
+    return function (target, context) {
+        context.addInitializer(function () {
+            const element = this["shadow"].getElementById(id);
+            if (!element) {
+                throw new Error(`can not find HTML element with id: ${id}`);
+            }
+            if (element.parentElement &&
+                element.parentElement.children.length !== 1)
+                throw new Error("lists must be bound to elements that are only children of their parent");
+            element.setAttribute("original-display", element.style.display);
+            const value = context.access.get(this);
+            const privateKey = getPrivateKey(context.name);
+            const publicKey = getPublicKey(context.name);
+            const origDescriptor = getPropertyDescriptor(this, publicKey);
+            const setfn = (value) => {
+                recreateBoundList(transform.call(this, value), element, replaceInnerHtml, listItemId);
+                boundProxyRebuild.subscribe(() => {
+                    recreateBoundList(transform.call(this, value), element, replaceInnerHtml, listItemId);
+                });
+                this[privateKey] = boundProxyFactory(value);
+            };
+            setfn(value);
+            if (origDescriptor.set) {
+                hookPropertySetter(this, context.name, origDescriptor, (value) => {
+                    boundProxyRebuild.subscribe(() => {
+                        recreateBoundList(transform.call(this, value), element, replaceInnerHtml, listItemId);
+                    });
+                    boundProxyFactory(value);
+                    //recreateBoundList(transform.call(this, value));
+                });
+            }
+            else {
+                hookProperty(this, context.name, value, setfn);
+            }
+        });
+    };
+}
+exports.BindList = BindList;
 // Wrapper methods for specific operations
 /**
  * @description Decorator to bind the cssClassName property if the boolean property is true
@@ -832,19 +1099,19 @@ function BindValueToNumber(id, append = "") {
 }
 exports.BindValueToNumber = BindValueToNumber;
 /**
-* @description Decorator to bind a specific style to a number, and optionally append a string to the value
-* @param id the element to bind the property to
-* @param style the style to bind (i.e. background-color, left, top, etc.)
-* @Param optional string to append to the number before setting the value
-* @returns DecoratorCallback
-* @overload
-* @export
-* @group Bind Decorators
-* @example
-* //This will set the width of the div to the number in width
-* @BindStyleToNumber("myDiv", "width","%")
-* public width: number = 100;
-*/
+ * @description Decorator to bind a specific style to a number, and optionally append a string to the value
+ * @param id the element to bind the property to
+ * @param style the style to bind (i.e. background-color, left, top, etc.)
+ * @Param optional string to append to the number before setting the value
+ * @returns DecoratorCallback
+ * @overload
+ * @export
+ * @group Bind Decorators
+ * @example
+ * //This will set the width of the div to the number in width
+ * @BindStyleToNumber("myDiv", "width","%")
+ * public width: number = 100;
+ */
 function BindStyleToNumber(id, style, append = "") {
     return BindStyle(id, style, (value) => `${value}${append}`);
 }
@@ -870,10 +1137,10 @@ exports.BindStyleToNumberAppendPx = BindStyleToNumberAppendPx;
 
 /***/ }),
 
-/***/ "./node_modules/@gsilber/webez/bootstrap.js":
-/*!**************************************************!*\
-  !*** ./node_modules/@gsilber/webez/bootstrap.js ***!
-  \**************************************************/
+/***/ "./node_modules/@boots-edu/webz/bootstrap.js":
+/*!***************************************************!*\
+  !*** ./node_modules/@boots-edu/webz/bootstrap.js ***!
+  \***************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -898,10 +1165,10 @@ exports.bootstrap = bootstrap;
 
 /***/ }),
 
-/***/ "./node_modules/@gsilber/webez/event.decorators.js":
-/*!*********************************************************!*\
-  !*** ./node_modules/@gsilber/webez/event.decorators.js ***!
-  \*********************************************************/
+/***/ "./node_modules/@boots-edu/webz/event.decorators.js":
+/*!**********************************************************!*\
+  !*** ./node_modules/@boots-edu/webz/event.decorators.js ***!
+  \**********************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -929,7 +1196,10 @@ function GenericEvent(htmlElementID, type) {
                 element.addEventListener(type, (e) => {
                     if (type === "input" || type === "change")
                         if (element.type === "checkbox") {
-                            e.value = element.checked ? "on" : "";
+                            e.value =
+                                element.checked ?
+                                    "on"
+                                    : "";
                         }
                         else {
                             e.value = element.value;
@@ -996,7 +1266,7 @@ function Blur(htmlElementID) {
 }
 exports.Blur = Blur;
 /**
- * @description Decorator to bind a change event to an element
+ * @description Decorator to bind a change event to an element.  For checkboxes, this will return "on" when checked or "" when unchecked.
  * @param htmlElementID the element to bind the event to
  * @returns DecoratorCallback
  * @export
@@ -1056,10 +1326,10 @@ exports.Timer = Timer;
 
 /***/ }),
 
-/***/ "./node_modules/@gsilber/webez/eventsubject.js":
-/*!*****************************************************!*\
-  !*** ./node_modules/@gsilber/webez/eventsubject.js ***!
-  \*****************************************************/
+/***/ "./node_modules/@boots-edu/webz/eventsubject.js":
+/*!******************************************************!*\
+  !*** ./node_modules/@boots-edu/webz/eventsubject.js ***!
+  \******************************************************/
 /***/ ((__unused_webpack_module, exports) => {
 
 "use strict";
@@ -1155,7 +1425,7 @@ class EventSubject {
      * @returns Promise<T>
      * @example
      * async myFunction() {
-     *   const result=await EzDialog.popup(
+     *   const result=await WebzDialog.popup(
      *     "Hello World",
      *     "Alert", ["Ok","Cancel"]).toPromise();
      *   console.log(result);
@@ -1176,10 +1446,10 @@ exports.EventSubject = EventSubject;
 
 /***/ }),
 
-/***/ "./node_modules/@gsilber/webez/index.js":
-/*!**********************************************!*\
-  !*** ./node_modules/@gsilber/webez/index.js ***!
-  \**********************************************/
+/***/ "./node_modules/@boots-edu/webz/index.js":
+/*!***********************************************!*\
+  !*** ./node_modules/@boots-edu/webz/index.js ***!
+  \***********************************************/
 /***/ (function(__unused_webpack_module, exports, __webpack_require__) {
 
 "use strict";
@@ -1199,12 +1469,13 @@ var __exportStar = (this && this.__exportStar) || function(m, exports) {
     for (var p in m) if (p !== "default" && !Object.prototype.hasOwnProperty.call(exports, p)) __createBinding(exports, m, p);
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
-__exportStar(__webpack_require__(/*! ./bind.decorators */ "./node_modules/@gsilber/webez/bind.decorators.js"), exports);
-__exportStar(__webpack_require__(/*! ./event.decorators */ "./node_modules/@gsilber/webez/event.decorators.js"), exports);
-__exportStar(__webpack_require__(/*! ./EzComponent */ "./node_modules/@gsilber/webez/EzComponent.js"), exports);
-__exportStar(__webpack_require__(/*! ./EzDialog */ "./node_modules/@gsilber/webez/EzDialog.js"), exports);
-__exportStar(__webpack_require__(/*! ./eventsubject */ "./node_modules/@gsilber/webez/eventsubject.js"), exports);
-__exportStar(__webpack_require__(/*! ./bootstrap */ "./node_modules/@gsilber/webez/bootstrap.js"), exports);
+__exportStar(__webpack_require__(/*! ./bind.decorators */ "./node_modules/@boots-edu/webz/bind.decorators.js"), exports);
+__exportStar(__webpack_require__(/*! ./event.decorators */ "./node_modules/@boots-edu/webz/event.decorators.js"), exports);
+__exportStar(__webpack_require__(/*! ./WebzComponent */ "./node_modules/@boots-edu/webz/WebzComponent.js"), exports);
+__exportStar(__webpack_require__(/*! ./WebzDialog */ "./node_modules/@boots-edu/webz/WebzDialog.js"), exports);
+__exportStar(__webpack_require__(/*! ./WebzRouter */ "./node_modules/@boots-edu/webz/WebzRouter.js"), exports);
+__exportStar(__webpack_require__(/*! ./eventsubject */ "./node_modules/@boots-edu/webz/eventsubject.js"), exports);
+__exportStar(__webpack_require__(/*! ./bootstrap */ "./node_modules/@boots-edu/webz/bootstrap.js"), exports);
 
 
 /***/ }),
@@ -1816,7 +2087,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.BallComponent = void 0;
-const webez_1 = __webpack_require__(/*! @gsilber/webez */ "./node_modules/@gsilber/webez/index.js");
+const webz_1 = __webpack_require__(/*! @boots-edu/webz */ "./node_modules/@boots-edu/webz/index.js");
 const ball_component_html_1 = __importDefault(__webpack_require__(/*! ./ball.component.html */ "./src/app/ball/ball.component.html"));
 const ball_component_css_1 = __importDefault(__webpack_require__(/*! ./ball.component.css */ "./src/app/ball/ball.component.css"));
 const globals_1 = __webpack_require__(/*! ../globals */ "./src/app/globals.ts");
@@ -1825,14 +2096,14 @@ const paddle_component_1 = __webpack_require__(/*! ../paddle/paddle.component */
  * @description The ball component
  * @export
  * @class BallComponent
- * @extends {EzComponent}
+ * @extends {WebzComponent}
  * @method restart : Restart the ball
  * @method increaseSpeed : Increase the speed of the ball
  * @method moveBall : Move the ball
  */
 let BallComponent = (() => {
     var _a;
-    let _classSuper = webez_1.EzComponent;
+    let _classSuper = webz_1.WebzComponent;
     let _instanceExtraInitializers = [];
     let _ball_width_decorators;
     let _ball_width_initializers = [];
@@ -1949,7 +2220,7 @@ let BallComponent = (() => {
                  * @type {EventSubject<void>}
                  * @memberof BallComponent
                  */
-                this.gameOver = new webez_1.EventSubject();
+                this.gameOver = new webz_1.EventSubject();
             }
             /**
              * @description Restarts the ball
@@ -2047,13 +2318,13 @@ let BallComponent = (() => {
         (() => {
             var _b;
             const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create((_b = _classSuper[Symbol.metadata]) !== null && _b !== void 0 ? _b : null) : void 0;
-            _ball_width_decorators = [(0, webez_1.BindStyleToNumberAppendPx)("ball", "width")];
-            _ball_height_decorators = [(0, webez_1.BindStyleToNumberAppendPx)("ball", "height")];
-            _ball_x_decorators = [(0, webez_1.BindStyleToNumberAppendPx)("ball", "left")];
-            _ball_y_decorators = [(0, webez_1.BindStyleToNumberAppendPx)("ball", "top")];
-            _ball_color_decorators = [(0, webez_1.BindStyle)("ball", "backgroundColor")];
-            _increaseSpeed_decorators = [(0, webez_1.Timer)(10000)];
-            _moveBall_decorators = [(0, webez_1.Timer)(50)];
+            _ball_width_decorators = [(0, webz_1.BindStyleToNumberAppendPx)("ball", "width")];
+            _ball_height_decorators = [(0, webz_1.BindStyleToNumberAppendPx)("ball", "height")];
+            _ball_x_decorators = [(0, webz_1.BindStyleToNumberAppendPx)("ball", "left")];
+            _ball_y_decorators = [(0, webz_1.BindStyleToNumberAppendPx)("ball", "top")];
+            _ball_color_decorators = [(0, webz_1.BindStyle)("ball", "backgroundColor")];
+            _increaseSpeed_decorators = [(0, webz_1.Timer)(10000)];
+            _moveBall_decorators = [(0, webz_1.Timer)(50)];
             __esDecorate(_a, null, _increaseSpeed_decorators, { kind: "method", name: "increaseSpeed", static: false, private: false, access: { has: obj => "increaseSpeed" in obj, get: obj => obj.increaseSpeed }, metadata: _metadata }, null, _instanceExtraInitializers);
             __esDecorate(_a, null, _moveBall_decorators, { kind: "method", name: "moveBall", static: false, private: false, access: { has: obj => "moveBall" in obj, get: obj => obj.moveBall }, metadata: _metadata }, null, _instanceExtraInitializers);
             __esDecorate(null, null, _ball_width_decorators, { kind: "field", name: "ball_width", static: false, private: false, access: { has: obj => "ball_width" in obj, get: obj => obj.ball_width, set: (obj, value) => { obj.ball_width = value; } }, metadata: _metadata }, _ball_width_initializers, _ball_width_extraInitializers);
@@ -2150,7 +2421,7 @@ Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.MainComponent = void 0;
 const main_component_html_1 = __importDefault(__webpack_require__(/*! ./main.component.html */ "./src/app/main.component.html"));
 const main_component_css_1 = __importDefault(__webpack_require__(/*! ./main.component.css */ "./src/app/main.component.css"));
-const webez_1 = __webpack_require__(/*! @gsilber/webez */ "./node_modules/@gsilber/webez/index.js");
+const webz_1 = __webpack_require__(/*! @boots-edu/webz */ "./node_modules/@boots-edu/webz/index.js");
 const paddle_component_1 = __webpack_require__(/*! ./paddle/paddle.component */ "./src/app/paddle/paddle.component.ts");
 const globals_1 = __webpack_require__(/*! ./globals */ "./src/app/globals.ts");
 const ball_component_1 = __webpack_require__(/*! ./ball/ball.component */ "./src/app/ball/ball.component.ts");
@@ -2158,7 +2429,7 @@ const ball_component_1 = __webpack_require__(/*! ./ball/ball.component */ "./src
  * @description The main component of the game
  * @export
  * @class MainComponent
- * @extends {EzComponent}
+ * @extends {WebzComponent}
  * @method startGame : event handler for start button
  * @method updateTimer : Main game loop timer
  * @method start : Reset and start a new game
@@ -2166,7 +2437,7 @@ const ball_component_1 = __webpack_require__(/*! ./ball/ball.component */ "./src
  */
 let MainComponent = (() => {
     var _a;
-    let _classSuper = webez_1.EzComponent;
+    let _classSuper = webz_1.WebzComponent;
     let _instanceExtraInitializers = [];
     let _boardWidth_decorators;
     let _boardWidth_initializers = [];
@@ -2240,7 +2511,7 @@ let MainComponent = (() => {
                 this.addComponent(this.ball, "game-board");
                 this.ball.gameOver.subscribe(() => {
                     this.stop();
-                    webez_1.EzDialog.popup(this, "Would you like to play again?", "Game Over", ["Yes", "No"], "btn btn-primary").subscribe((result) => {
+                    webz_1.WebzDialog.popup(this, "Would you like to play again?", "Game Over", ["Yes", "No"], "btn btn-primary").subscribe((result) => {
                         if (result === "Yes") {
                             this.start();
                         }
@@ -2296,11 +2567,11 @@ let MainComponent = (() => {
         (() => {
             var _b;
             const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create((_b = _classSuper[Symbol.metadata]) !== null && _b !== void 0 ? _b : null) : void 0;
-            _boardWidth_decorators = [(0, webez_1.BindStyleToNumberAppendPx)("game-board", "width")];
-            _boardHeight_decorators = [(0, webez_1.BindStyleToNumberAppendPx)("game-board", "height")];
-            _time_decorators = [(0, webez_1.BindValue)("timer")];
-            _startGame_decorators = [(0, webez_1.Click)("go")];
-            _updateTimer_decorators = [(0, webez_1.Timer)(1000)];
+            _boardWidth_decorators = [(0, webz_1.BindStyleToNumberAppendPx)("game-board", "width")];
+            _boardHeight_decorators = [(0, webz_1.BindStyleToNumberAppendPx)("game-board", "height")];
+            _time_decorators = [(0, webz_1.BindValue)("timer")];
+            _startGame_decorators = [(0, webz_1.Click)("go")];
+            _updateTimer_decorators = [(0, webz_1.Timer)(1000)];
             __esDecorate(_a, null, _startGame_decorators, { kind: "method", name: "startGame", static: false, private: false, access: { has: obj => "startGame" in obj, get: obj => obj.startGame }, metadata: _metadata }, null, _instanceExtraInitializers);
             __esDecorate(_a, null, _updateTimer_decorators, { kind: "method", name: "updateTimer", static: false, private: false, access: { has: obj => "updateTimer" in obj, get: obj => obj.updateTimer }, metadata: _metadata }, null, _instanceExtraInitializers);
             __esDecorate(null, null, _boardWidth_decorators, { kind: "field", name: "boardWidth", static: false, private: false, access: { has: obj => "boardWidth" in obj, get: obj => obj.boardWidth, set: (obj, value) => { obj.boardWidth = value; } }, metadata: _metadata }, _boardWidth_initializers, _boardWidth_extraInitializers);
@@ -2362,7 +2633,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 };
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.PaddleComponent = void 0;
-const webez_1 = __webpack_require__(/*! @gsilber/webez */ "./node_modules/@gsilber/webez/index.js");
+const webz_1 = __webpack_require__(/*! @boots-edu/webz */ "./node_modules/@boots-edu/webz/index.js");
 const paddle_component_html_1 = __importDefault(__webpack_require__(/*! ./paddle.component.html */ "./src/app/paddle/paddle.component.html"));
 const paddle_component_css_1 = __importDefault(__webpack_require__(/*! ./paddle.component.css */ "./src/app/paddle/paddle.component.css"));
 const globals_1 = __webpack_require__(/*! ../globals */ "./src/app/globals.ts");
@@ -2370,7 +2641,7 @@ const globals_1 = __webpack_require__(/*! ../globals */ "./src/app/globals.ts");
  * @description The paddle component
  * @export
  * @class PaddleComponent
- * @extends {EzComponent}
+ * @extends {WebzComponent}
  * @method movePaddleUp : Move the paddle up
  * @method movePaddleDown : Move the paddle down
  * @method getPaddleRect : Get the paddle rectangle
@@ -2378,7 +2649,7 @@ const globals_1 = __webpack_require__(/*! ../globals */ "./src/app/globals.ts");
  */
 let PaddleComponent = (() => {
     var _a;
-    let _classSuper = webez_1.EzComponent;
+    let _classSuper = webz_1.WebzComponent;
     let _instanceExtraInitializers = [];
     let _paddle_width_decorators;
     let _paddle_width_initializers = [];
@@ -2512,12 +2783,12 @@ let PaddleComponent = (() => {
         (() => {
             var _b;
             const _metadata = typeof Symbol === "function" && Symbol.metadata ? Object.create((_b = _classSuper[Symbol.metadata]) !== null && _b !== void 0 ? _b : null) : void 0;
-            _paddle_width_decorators = [(0, webez_1.BindStyleToNumberAppendPx)("paddle", "width")];
-            _paddle_height_decorators = [(0, webez_1.BindStyleToNumberAppendPx)("paddle", "height")];
-            _paddle_x_decorators = [(0, webez_1.BindStyleToNumberAppendPx)("paddle", "left")];
-            _paddle_y_decorators = [(0, webez_1.BindStyleToNumberAppendPx)("paddle", "top")];
-            __paddle_color_decorators = [(0, webez_1.BindStyle)("paddle", "backgroundColor")];
-            _onKeyPress_decorators = [(0, webez_1.WindowEvent)("keydown")];
+            _paddle_width_decorators = [(0, webz_1.BindStyleToNumberAppendPx)("paddle", "width")];
+            _paddle_height_decorators = [(0, webz_1.BindStyleToNumberAppendPx)("paddle", "height")];
+            _paddle_x_decorators = [(0, webz_1.BindStyleToNumberAppendPx)("paddle", "left")];
+            _paddle_y_decorators = [(0, webz_1.BindStyleToNumberAppendPx)("paddle", "top")];
+            __paddle_color_decorators = [(0, webz_1.BindStyle)("paddle", "backgroundColor")];
+            _onKeyPress_decorators = [(0, webz_1.WindowEvent)("keydown")];
             __esDecorate(_a, null, _onKeyPress_decorators, { kind: "method", name: "onKeyPress", static: false, private: false, access: { has: obj => "onKeyPress" in obj, get: obj => obj.onKeyPress }, metadata: _metadata }, null, _instanceExtraInitializers);
             __esDecorate(null, null, _paddle_width_decorators, { kind: "field", name: "paddle_width", static: false, private: false, access: { has: obj => "paddle_width" in obj, get: obj => obj.paddle_width, set: (obj, value) => { obj.paddle_width = value; } }, metadata: _metadata }, _paddle_width_initializers, _paddle_width_extraInitializers);
             __esDecorate(null, null, _paddle_height_decorators, { kind: "field", name: "paddle_height", static: false, private: false, access: { has: obj => "paddle_height" in obj, get: obj => obj.paddle_height, set: (obj, value) => { obj.paddle_height = value; } }, metadata: _metadata }, _paddle_height_initializers, _paddle_height_extraInitializers);
@@ -2617,9 +2888,9 @@ var exports = __webpack_exports__;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 __webpack_require__(/*! ../styles.css */ "./styles.css");
-const webez_1 = __webpack_require__(/*! @gsilber/webez */ "./node_modules/@gsilber/webez/index.js");
+const webz_1 = __webpack_require__(/*! @boots-edu/webz */ "./node_modules/@boots-edu/webz/index.js");
 const main_component_1 = __webpack_require__(/*! ../src/app/main.component */ "./src/app/main.component.ts");
-(0, webez_1.bootstrap)(main_component_1.MainComponent);
+(0, webz_1.bootstrap)(main_component_1.MainComponent);
 
 })();
 

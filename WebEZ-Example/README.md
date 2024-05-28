@@ -1,1 +1,0 @@
-# WebEZ-Example Application

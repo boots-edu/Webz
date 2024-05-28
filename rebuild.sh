@@ -1,22 +1,19 @@
 #!/bin/bash
 
-cd WebEZ-core
+cd webz-core
 npm run build
 npm run pub
-cd ../WebEZ-CLI
+cd ../webz-cli
 npm run build
 npm run pub
-cd ../WebEZ-Example
-npm i -D @gsilber/webez
+cd ../examples/webz-task
+npm i -D @boots-edu/webz
 npm run build
-cd ../movies
-npm i -D @gsilber/webez
+cd ../webz-lander
+npm i -D @boots-edu/webz
 npm run build
-cd ../lander
-npm i -D @gsilber/webez
-npm run build
-cd ../web-pong
-npm i -D @gsilber/webez
+cd ../webz-pong
+npm i -D @boots-edu/webz
 npm run build
 cd ..
 ./builddocs.sh
