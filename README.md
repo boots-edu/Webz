@@ -1,28 +1,28 @@
-# WebEZ - A simple web framework for Typescript (0.9.2)
+# Webz - A simple web framework for Typescript (0.9.5)
 
 ## Getting Started
 
-WebEZ is a simple to use framework for developing web applications in typescript. WebEZ uses _webpack_ to create a single html and javascript file ready for deployment.
+Webz is a simple to use framework for developing web applications in typescript. Webz uses _webpack_ to create a single html and javascript file ready for deployment.  Webz is a major component of the BOOTS (Beginner Object Oriented Programming in Typescript) curriculum.
 
-To get started, install the webez command line interface.
+To get started, install the Webz command line interface.
 
 ```
-npm install -g @gsilber/webez-cli
+npm install -g @boots-edu/webz-cli
 ```
 
-Once installed, you can use the `webez` command to create a new web application and to add components to an existing one.
+Once installed, you can use the `Webz` command to create a new web application and to add components to an existing one.
 >Note: You may need to run this command with sudo on Unix/Linux/Mac:
-```sudo npm install -g @gsilber/webez-cli```
+```sudo npm install -g @boots-edu/webz-cli```
 
 ## Creating a new website
 
 Go to the parent directory of where you want your new application and issue the command.
 
 ```
-webez new <project name>
+Webz new <project name>
 ```
 
-where **project name** is the name you want to use for your new project. WebEZ will set up your project directory and install necessary dependencies. When it completes, you can access the project folder
+where **project name** is the name you want to use for your new project. Webz will set up your project directory and install necessary dependencies. When it completes, you can access the project folder
 
 ```
 cd <project name>
@@ -32,10 +32,10 @@ and open your project in your favorite IDE.
 
 ## Creating a new component for your website
 
-At the command line, navigate to the src/app folder (or a subfolder if you built more structure) and issue the webez component command
+At the command line, navigate to the src/app folder (or a subfolder if you built more structure) and issue the Webz component command
 
 ```
-webez component <componentName>
+Webz component <componentName>
 ```
 
 where **componentName** is the component to create. This will create the following files:
@@ -55,7 +55,7 @@ You can find the file `styles.css` in the root of your project. You can add any 
 
 ## Building your site
 
-The webez framework comes with npm build scripts which you can execute with
+The Webz framework comes with npm build scripts which you can execute with
 
 ```
 npm run <command>
@@ -73,7 +73,7 @@ Where command is one of:
 Additionally, you can look in the generated package.json for more options.
 
 ## Deploying your site
-WebEZ sites are automatically deployed to github pages when the main branch is successfully pushed.  You do have to enable this in github for your repository.  Go to github.com and to your repository, then click on settings->pages. Pull down the source drop down and select Github Actions.  The next time you push the main branch, you will automatically publish to github pages (note: the web address will appear at the top of the pages settings once you select the source).
+Webz sites are automatically deployed to github pages when the main branch is successfully pushed.  You do have to enable this in github for your repository.  Go to github.com and to your repository, then click on settings->pages. Pull down the source drop down and select Github Actions.  The next time you push the main branch, you will automatically publish to github pages (note: the web address will appear at the top of the pages settings once you select the source).
 
 ## Designing components
 
@@ -101,7 +101,7 @@ When you first create a site, it contains a single component called MainComponen
 -   Add properties and methods to your class to hold values or handle events
 
 ```
-export class MainComponent extends EzComponent {
+export class MainComponent extends WebzComponent {
 	///will link up to the input element
     userName: string = "";
 	//will link up to the div element
@@ -122,7 +122,7 @@ export class MainComponent extends EzComponent {
 -   Decorate the properties with one of BindValue, BindStyle or BindCSSClass specifying the id of the element you want to bind. BindCSSClass will bind the elmements `class` attribute to the property.  It will leave any classes defined in the html alone, they cannot be removed programmatically. Changing the property value changes the css class of the element for dynamic styling. BindStyle will bind the specified element and specific style setting to the variable.  Note BindValue, BindStyle, and BindCSSClass can be stacked. 
 
 ```
-export class MainComponent extends EzComponent {
+export class MainComponent extends WebzComponent {
 	@BindValue("user-name")
     userName: string = "";
 
@@ -147,7 +147,7 @@ export class MainComponent extends EzComponent {
 -   Decorate methods with various event handlers. These include Click, Blur, Change, Input. There is also a generic event handler decorator GenericEvent which takes the id of the element and the name of the event you want in order to allow all html events to be captured.
 
 ```
-export class MainComponent extends EzComponent {
+export class MainComponent extends WebzComponent {
 	@BindValue("user-name")
     userName: string = "";
 
@@ -171,7 +171,7 @@ export class MainComponent extends EzComponent {
 ## Adding sub-components
 You add subcomponents to a component (like MainComponent) by calling the AddComponent method and passing it an instance of the child component.  You can optionally specify the id of the html element into which you want to place the child component.
 ### AddComponent(component,?htmlid)
-Installs a component as a child of the current component.  In the following example, MainComponent is the top level component created automatically by the framework.  ChildComponent is another webez generated component you would like to add.  If htmlid is not provided, the child component is added to the bottom of the parent html document. You should try to attach it to an element.
+Installs a component as a child of the current component.  In the following example, MainComponent is the top level component created automatically by the framework.  ChildComponent is another Webz generated component you would like to add.  If htmlid is not provided, the child component is added to the bottom of the parent html document. You should try to attach it to an element.
 ```
 HTML File (main.component.html):
 <div id="childhere"></div>
@@ -569,10 +569,10 @@ const request=this.ajax<boolean>("http://api.test.com",HttpMethod.POST,[],userRe
     });
 ```
 ## Other types of components
-### EzDialog
-This EzComponent derived class allows you to create popup dialogs just like other components.  Your component just shows up in the middle of the dialog.  You can hide or show your dialog with ```this.show(true|false)```.  There is also a utility static method ```popup``` that you can use for a quick alert or confirm message.  It returns an EventSubject whose subscription is called when the dialog closes with the value of the button pressed (i.e. the text on the button).
+### WebzDialog
+This WebzComponent derived class allows you to create popup dialogs just like other components.  Your component just shows up in the middle of the dialog.  You can hide or show your dialog with ```this.show(true|false)```.  There is also a utility static method ```popup``` that you can use for a quick alert or confirm message.  It returns an EventSubject whose subscription is called when the dialog closes with the value of the button pressed (i.e. the text on the button).
 ```
-webez dialog editor
+Webz dialog editor
 ```
 will create an editor (works similar to component) dialog.  This can be modified and used:
 ```
@@ -582,7 +582,7 @@ dlg.show();
 ```
 an alert box can be shown simply by using:
 ```
-    EzDialog.popup(this, "Message to display").subscribe(
+    WebzDialog.popup(this, "Message to display").subscribe(
     (value: string) => {
         console.log(value); //will be Ok
     },
@@ -590,7 +590,7 @@ an alert box can be shown simply by using:
 ```
 A confirmation box can be shown by using:
 ```
-        EzDialog.popup(this, "Message to display", "Window title", [
+        WebzDialog.popup(this, "Message to display", "Window title", [
             "Yes",
             "No",
             "Cancel","btn btn-primary"
@@ -605,8 +605,8 @@ A confirmation box can be shown by using:
         });
 ```
 We are specifying the title, the buttons to display, and a class for the buttons to style them.  It will return a subscription that will evaluate to the button name passed into the method.
-### EzRouter
-The ```EzRouter``` class handles routing.  You create one by calling EzComponent's addRouter method with an array of routes and a target
+### WebzRouter
+The ```WebzRouter``` class handles routing.  You create one by calling WebzComponent's addRouter method with an array of routes and a target
 ```
 HTML File:
 <div class="main">
@@ -633,7 +633,7 @@ You can change pages in code by calling the route method and passing it the path
 ```
 ## Utility Classes
 ### EventSubject
-The ```EventSubject``` class can be used to handle asynchronous code. You can either ```subscribe``` to it or convert it to a promise with the ```toPromise``` method.  Many functions in ```WebEZ``` return an ```EventSubject``` that you can subscribe to.
+The ```EventSubject``` class can be used to handle asynchronous code. You can either ```subscribe``` to it or convert it to a promise with the ```toPromise``` method.  Many functions in ```Webz``` return an ```EventSubject``` that you can subscribe to.
 ```
 event:EventSubject<boolean> = new EventSubject<boolean>();
 event.subscribe((result:boolean)=>{
@@ -650,19 +650,16 @@ let result:boolean = await event.toPromise();
 
 ## Working example program
 A fully working example can be found here: 
-[https://gsilber.github.io/WebEZ/example](https://gsilber.github.io/WebEZ/example)
+[https://boots-edu.github.io/Webz/example](https://boots-edu.github.io/Webz/example)
 
 Another here:
-[https://gsilber.github.io/WebEZ/webpong](https://gsilber.github.io/WebEZ/webpong)
+[https://boots-edu.github.io/Webz/webpong](https://boots-edu.github.io/Webz/webpong)
 
 And my personal favorite:
-[https://gsilber.github.io/WebEZ/lander](https://gsilber.github.io/WebEZ/lander)
+[https://boots-edu.github.io/Webz/lander](https://boots-edu.github.io/Webz/lander)
 
-And one more showing api usage:
-[https://gsilber.github.io/WebEZ/movies](https://gsilber.github.io/WebEZ/movies)
-
-All of these were created with WebEZ without accessing any DOM elements directly.
+All of these were created with Webz without accessing any DOM elements directly.
 
 ## Full Technical Documenation
 
-Full technical documentation is available [https://gsilber.github.io/WebEZ/](https://gsilber.github.io/WebEZ/)
+Full technical documentation is available [https://boots-edu.github.io/Webz/](https://boots-edu.github.io/Webz/)

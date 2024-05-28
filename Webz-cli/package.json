@@ -1,11 +1,11 @@
 {
     "name": "@boots-edu/webz-cli",
-    "version": "0.9.2",
+    "version": "0.9.5",
     "description": "",
     "main": "index.js",
     "scripts": {
         "test-pub": "./version.sh && cp ./package.json ./dist && cd ./dist && npm publish --dry-run",
-        "pub": "./version.sh && cp ./package.json ./dist && cd ./dist && npm publish --access public",
+        "pub": "npm run build &&  cp ./package.json ./dist && cd ./dist && npm publish --access public",
         "build": "./version.sh && tsc && chmod +x ./dist/webz.js && rm -rf ./dist/scaffold && cp -r ./scaffold ./dist && rm -rf ./dist/component-scaffold && mkdir ./dist/component-scaffold && cp -r ./component-scaffold ./dist && rm -rf ./dist/dialog-scaffold && mkdir ./dist/dialog-scaffold && cp -r ./dialog-scaffold ./dist && cp ./package.json ./dist"
     },
     "author": "",

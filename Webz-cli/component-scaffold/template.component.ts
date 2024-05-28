@@ -1,4 +1,4 @@
-import { WebzComponent } from "@gsilber/";
+import { WebzComponent } from "@boots-edu/webz";
 import html from "./########.component.html";
 import css from "./########.component.css";
 
