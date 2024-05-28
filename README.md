@@ -1,4 +1,4 @@
-# Webz - A simple web framework for Typescript (0.9.5)
+# Webz - A simple web framework for Typescript (0.9.6)
 
 ## Getting Started
 
