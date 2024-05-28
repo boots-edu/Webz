@@ -1,6 +1,6 @@
 import { describe, expect, test, beforeAll } from "@jest/globals";
 import { $$$$$$$$Dialog } from "./########.dialog";
-import { bootstrap } from "@boots/webz";
+import { bootstrap } from "@boots-edu/webz";
 
 describe("$$$$$$$$Dialog", () => {
     let component: any = undefined;

@@ -1,6 +1,6 @@
 {
     "name": "@boots-edu/webz",
-    "version": "0.9.6",
+    "version": "0.9.8",
     "description": "",
     "main": "dist/index.js",
     "scripts": {

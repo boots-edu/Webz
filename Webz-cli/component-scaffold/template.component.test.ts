@@ -1,6 +1,6 @@
 import { describe, expect, test, beforeAll } from "@jest/globals";
 import { $$$$$$$$Component } from "./########.component";
-import { bootstrap } from "@boots/webz";
+import { bootstrap } from "@boots-edu/webz";
 
 describe("$$$$$$$$Component", () => {
     let component: any = undefined;

@@ -1,4 +1,4 @@
-import { WebzDialog, Click } from "@boots/webz";
+import { WebzDialog, Click } from "@boots-edu/webz";
 import html from "./########.dialog.html";
 import css from "./########.dialog.css";
 
