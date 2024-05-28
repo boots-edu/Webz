@@ -2111,7 +2111,7 @@
 <span class="cline-any cline-neutral">&nbsp;</span>
 <span class="cline-any cline-yes">5x</span>
 <span class="cline-any cline-neutral">&nbsp;</span>
-<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { EzComponent } from "./EzComponent";
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">import { WebzComponent } from "./WebzComponent";
 import { EventSubject } from "./eventsubject";
 &nbsp;
 /**
@@ -2120,7 +2120,7 @@ import { EventSubject } from "./eventsubject";
  * @returns the public key
  * @ignore
  */
-function getPublicKey&lt;This extends EzComponent&gt;(
+function getPublicKey&lt;This extends WebzComponent&gt;(
     name: string | symbol,
 ): keyof This {
     return String(name) as keyof This;
@@ -2132,7 +2132,7 @@ function getPublicKey&lt;This extends EzComponent&gt;(
  * @returns the private key
  * @ignore
  */
-function getPrivateKey&lt;This extends EzComponent&gt;(
+function getPrivateKey&lt;This extends WebzComponent&gt;(
     name: string | symbol,
 ): keyof This {
     return `__${String(name)}` as keyof This;
@@ -2147,7 +2147,7 @@ function getPrivateKey&lt;This extends EzComponent&gt;(
  * @param callSetterFirst if true, the setter is called before the original setter, otherwise it is called after.
  * @ignore
  */
-function hookProperty&lt;This extends EzComponent, T&gt;(
+function hookProperty&lt;This extends WebzComponent, T&gt;(
     target: This,
     name: string | symbol,
     value: T,
@@ -2185,7 +2185,7 @@ function hookProperty&lt;This extends EzComponent, T&gt;(
  * @param callSetterFirst if true, the setter is called before the original setter, otherwise it is called after.
  * @ignore
  */
-function hookPropertySetter&lt;This extends EzComponent, T&gt;(
+function hookPropertySetter&lt;This extends WebzComponent, T&gt;(
     target: This,
     name: string | symbol,
     origDescriptor: PropertyDescriptor,
@@ -2214,7 +2214,7 @@ function hookPropertySetter&lt;This extends EzComponent, T&gt;(
  * @throws Error if the property descriptor is not found
  * @ignore
  */
-function getPropertyDescriptor&lt;This extends EzComponent&gt;(
+function getPropertyDescriptor&lt;This extends WebzComponent&gt;(
     target: This,
     key: keyof This,
 ): PropertyDescriptor {
@@ -2408,7 +2408,7 @@ function boundProxyFactory(array: string[]) {
  * public backgroundColor: string = "red";
  */
 export function BindStyle&lt;
-    This extends EzComponent,
+    This extends WebzComponent,
     K extends keyof CSSStyleDeclaration,
     Value extends CSSStyleDeclaration[K],
 &gt;(
@@ -2432,7 +2432,7 @@ export function BindStyle&lt;
  * public backgroundColor: boolean=true;
  */
 export function BindStyle&lt;
-    This extends EzComponent,
+    This extends WebzComponent,
     K extends keyof CSSStyleDeclaration,
     Value,
 &gt;(
@@ -2444,7 +2444,7 @@ export function BindStyle&lt;
 // Actual implementation, should not be in documentation as the overloads capture the two cases
 /**@ignore */
 export function BindStyle&lt;
-    This extends EzComponent,
+    This extends WebzComponent,
     K extends keyof CSSStyleDeclaration,
     Value,
 &gt;(
@@ -2514,7 +2514,7 @@ export function BindStyle&lt;
  * @BindCSSClass("myDiv")
  * public cssClass: string = "myCSSClass";
  */
-export function BindCSSClass&lt;This extends EzComponent, Value extends string&gt;(
+export function BindCSSClass&lt;This extends WebzComponent, Value extends string&gt;(
     id: string,
     transform?: (this: This, value: Value) =&gt; string,
 ): (target: any, context: ClassFieldDecoratorContext&lt;This, Value&gt;) =&gt; any;
@@ -2531,14 +2531,14 @@ export function BindCSSClass&lt;This extends EzComponent, Value extends string&g
  * @BindCSSClass("myDiv")
  * public cssClass: string = "myCSSClass";
  */
-export function BindCSSClass&lt;This extends EzComponent, Value&gt;(
+export function BindCSSClass&lt;This extends WebzComponent, Value&gt;(
     id: string,
     transform: (this: This, value: Value) =&gt; string,
 ): (target: any, context: ClassFieldDecoratorContext&lt;This, Value&gt;) =&gt; any;
 &nbsp;
 // Actual implementation, should not be in documentation as the overloads capture the two cases
 /**@ignore */
-export function BindCSSClass&lt;This extends EzComponent, Value&gt;(
+export function BindCSSClass&lt;This extends WebzComponent, Value&gt;(
     id: string,
     transform: (this: This, value: Value) =&gt; string = (value: Value) =&gt;
         value as string,
@@ -2656,7 +2656,7 @@ export function BindCSSClass&lt;This extends EzComponent, Value&gt;(
  * public hello: string = "Hello World";
  *
  */
-export function BindValue&lt;This extends EzComponent, Value extends string&gt;(
+export function BindValue&lt;This extends WebzComponent, Value extends string&gt;(
     id: string,
     transform?: (this: This, value: Value) =&gt; string,
 ): (target: any, context: ClassFieldDecoratorContext&lt;This, Value&gt;) =&gt; any;
@@ -2677,13 +2677,13 @@ export function BindValue&lt;This extends EzComponent, Value extends string&gt;(
  * @BindValue("myInput", (value: string) =&gt; value.toUpperCase())
  * public hello: string = "Hello World";
  */
-export function BindValue&lt;This extends EzComponent, Value&gt;(
+export function BindValue&lt;This extends WebzComponent, Value&gt;(
     id: string,
     transform: (this: This, value: Value) =&gt; string,
 ): (target: any, context: ClassFieldDecoratorContext&lt;This, Value&gt;) =&gt; any;
 &nbsp;
 // Actual implementation, should not be in documentation as the overloads capture the two cases
-export function BindValue&lt;This extends EzComponent, Value&gt;(
+export function BindValue&lt;This extends WebzComponent, Value&gt;(
     id: string,
     transform: (this: This, value: Value) =&gt; string = (value: Value) =&gt;
         value as string,
@@ -2783,7 +2783,7 @@ export function BindValue&lt;This extends EzComponent, Value&gt;(
  */
 &nbsp;
 export function BindAttribute&lt;
-    This extends EzComponent,
+    This extends WebzComponent,
     K extends string,
     Value extends string,
 &gt;(
@@ -2806,7 +2806,7 @@ export function BindAttribute&lt;
  * disabled:boolean=false;
  */
 export function BindAttribute&lt;
-    This extends EzComponent,
+    This extends WebzComponent,
     K extends string,
     Value,
 &gt;(
@@ -2817,7 +2817,7 @@ export function BindAttribute&lt;
 &nbsp;
 // Actual implementation, should not be in documentation as the overloads capture the two cases
 export function BindAttribute&lt;
-    This extends EzComponent,
+    This extends WebzComponent,
     K extends string,
     Value,
 &gt;(
@@ -2882,7 +2882,7 @@ export function BindAttribute&lt;
  * public list: number[] = ["one", "two", "three"];
  */
 &nbsp;
-export function BindList&lt;This extends EzComponent, Value extends string[]&gt;(
+export function BindList&lt;This extends WebzComponent, Value extends string[]&gt;(
     id: string,
     transform?: (this: This, value: Value) =&gt; string[],
     replaceInnerHtml?: boolean,
@@ -2904,7 +2904,7 @@ export function BindList&lt;This extends EzComponent, Value extends string[]&gt;
  * @BindList("myDiv", (value: number[]) =&gt; value.map((v)=&gt;v.toString()))
  * public list: number[] = [1,2,3];
  */
-export function BindList&lt;This extends EzComponent, Value extends any[]&gt;(
+export function BindList&lt;This extends WebzComponent, Value extends any[]&gt;(
     id: string,
     transform: (this: This, value: Value) =&gt; string[],
     replaceInnerHtml?: boolean,
@@ -2912,7 +2912,7 @@ export function BindList&lt;This extends EzComponent, Value extends any[]&gt;(
 ): (target: any, context: ClassFieldDecoratorContext&lt;This, Value&gt;) =&gt; any;
 &nbsp;
 //implementation
-export function BindList&lt;This extends EzComponent, Value extends string[]&gt;(
+export function BindList&lt;This extends WebzComponent, Value extends string[]&gt;(
     id: string,
     transform: (this: This, value: Value) =&gt; string[] = (value: Value) =&gt;
         value as string[],
@@ -2998,7 +2998,7 @@ export function BindList&lt;This extends EzComponent, Value extends string[]&gt;
  */
 export function BindCSSClassToBoolean&lt;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    This extends EzComponent,
+    This extends WebzComponent,
     Value extends boolean,
 &gt;(id: string, cssClassName: string) {
     return BindCSSClass(id, (value: Value) =&gt; (value ? cssClassName : ""));
@@ -3017,7 +3017,7 @@ export function BindCSSClassToBoolean&lt;
  */
 export function BindDisabledToBoolean&lt;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    This extends EzComponent,
+    This extends WebzComponent,
     Value extends boolean,
 &gt;(id: string) {
     return BindAttribute(id, "disabled", (value: Value) =&gt;
@@ -3038,7 +3038,7 @@ export function BindDisabledToBoolean&lt;
  */
 export function BindVisibleToBoolean&lt;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    This extends EzComponent,
+    This extends WebzComponent,
     Value extends boolean,
 &gt;(id: string) {
     return BindStyle(id, "display", (value: Value) =&gt;
@@ -3059,7 +3059,7 @@ export function BindVisibleToBoolean&lt;
  */
 export function BindCheckedToBoolean&lt;
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    This extends EzComponent,
+    This extends WebzComponent,
     Value extends boolean,
 &gt;(id: string) {
     return BindAttribute(id, "checked", (value: Value) =&gt;
@@ -3081,7 +3081,7 @@ export function BindCheckedToBoolean&lt;
  */
 export function <span class="fstat-no" title="function not covered" >BindValueToNumber&lt;</span>
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    This extends EzComponent,
+    This extends WebzComponent,
     Value extends number,
 &gt;(id: string, append: string = <span class="branch-0 cbranch-no" title="branch not covered" >"")</span> {
 <span class="cstat-no" title="statement not covered" >    return BindValue(id, <span class="fstat-no" title="function not covered" >(v</span>alue: Value) =&gt; <span class="cstat-no" title="statement not covered" >`${value}${append}` as string)</span>;</span>
@@ -3104,7 +3104,7 @@ export function <span class="fstat-no" title="function not covered" >BindValueTo
 export function BindStyleToNumber&lt;
     K extends keyof CSSStyleDeclaration,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    This extends EzComponent,
+    This extends WebzComponent,
     Value extends number,
 &gt;(id: string, style: K, append: string = "") {
     return BindStyle(
@@ -3129,7 +3129,7 @@ export function BindStyleToNumber&lt;
 export function BindStyleToNumberAppendPx&lt;
     K extends keyof CSSStyleDeclaration,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
-    This extends EzComponent,
+    This extends WebzComponent,
     // eslint-disable-next-line @typescript-eslint/no-unused-vars
     Value extends number,
 &gt;(id: string, style: K) {
@@ -3142,7 +3142,7 @@ export function BindStyleToNumberAppendPx&lt;
             <div class='footer quiet pad2 space-top1 center small'>
                 Code coverage generated by
                 <a href="https://istanbul.js.org/" target="_blank" rel="noopener noreferrer">istanbul</a>
-                at 2024-05-28T15:18:09.137Z
+                at 2024-05-28T16:27:12.984Z
             </div>
         <script src="prettify.js"></script>
         <script>

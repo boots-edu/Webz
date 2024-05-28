@@ -1,9 +1,9 @@
 #!/bin/bash
 
-cd webz-core
+cd Webz-core
 npm run build
 npm run pub
-cd ../webz-cli
+cd ../Webz-cli
 npm run build
 npm run pub
 cd ../examples/webz-task
@@ -15,5 +15,5 @@ npm run build
 cd ../webz-pong
 npm i -D @boots-edu/webz
 npm run build
-cd ..
+cd ../..
 ./builddocs.sh

@@ -1708,7 +1708,7 @@ __webpack_require__.r(__webpack_exports__);
   \*************************************/
 /***/ ((module) => {
 
-module.exports = "<div class=\"lander-container\">\n    <div id=\"header\">\n        <div class=\"left\">WebEZ Lander Game</div>\n        <div class=\"right\">\n            <button id=\"start\" class=\"btn btn-success\">Start Game</button>\n        </div>\n    </div>\n    <div id=\"content\">\n        <div id=\"terrain\"></div>\n        <div id=\"hud\"></div>\n    </div>\n</div>\n";
+module.exports = "<div class=\"lander-container\">\n    <div id=\"header\">\n        <div class=\"left\">Webz Lander Game</div>\n        <div class=\"right\">\n            <button id=\"start\" class=\"btn btn-success\">Start Game</button>\n        </div>\n    </div>\n    <div id=\"content\">\n        <div id=\"terrain\"></div>\n        <div id=\"hud\"></div>\n    </div>\n</div>\n";
 
 /***/ }),
 
@@ -2165,7 +2165,7 @@ const hud_component_1 = __webpack_require__(/*! ./objects/hud/hud.component */ "
  * Main Component
  * @description The main component of the game
  * @class
- * @extends EzComponent
+ * @extends WebzComponent
  * @method startGame - Starts the game
  * @method setupGame - Sets up the game
  * @property {LanderComponent} lander - The lander object
