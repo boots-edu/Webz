@@ -7,8 +7,8 @@ declare const window: Window;
  * @export
  * @interface Route
  * @group Routing
- * path - the path of the route
- * component - the component to render (instance of WebzComponent)
+ * @member path - the path of the route
+ * @member component - the component to render (instance of WebzComponent)
  */
 export interface Route {
     path: string;
