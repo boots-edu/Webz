@@ -11,30 +11,30 @@ interface CallbackDescription {
 }
 
 /**
- * EventSubject
- * @description A class for creating event subjects
+ * Notifier
+ * @description A class for creating events
  * @export
- * @class EventSubject
+ * @class Notifier
  * @group Async Event Sources
  */
-export class EventSubject<T = void> {
+export class Notifier<T = void> {
     private refCount: number = 0;
     private callbacks: CallbackDescription[] = [];
     private errorFns: CallbackDescription[] = [];
     constructor() {}
 
     /**
-     * Subscribe to the event subject
+     * Subscribe to the event
      * @param callback The callback to call when the event is triggered
      * @param error The callback to call when an error is triggered
      * @returns The id of the subscription
      * @example
-     * const subject = new EventSubject<number>();
-     * const id = subject.subscribe((value:number) => {
+     * const event = new Notifier<number>();
+     * const id = event.subscribe((value:number) => {
      *  console.log(value);
      * });
-     * subject.next(1);
-     * subject.unsubscribe(id);
+     * event.notify(1);
+     * event.unsubscribe(id);
      */
     subscribe(callback: (value: T) => void, error?: (value: Error) => void) {
         this.callbacks.push({ id: this.refCount, fn: callback });
@@ -42,16 +42,16 @@ export class EventSubject<T = void> {
         return this.refCount++;
     }
     /**
-     * Unsubscribe from the event subject
+     * Unsubscribe from the event
      * @param id The id of the subscription to remove
      * @returns void
      * @example
-     * const subject = new EventSubject<number>();
-     * const id = subject.subscribe((value:number) => {
+     * const event = new Notifier<number>();
+     * const id = event.subscribe((value:number) => {
      *   console.log(value);
      * });
-     * subject.next(1);
-     * subject.unsubscribe(id);
+     * event.notify(1);
+     * event.unsubscribe(id);
      */
     unsubscribe(id: number) {
         this.callbacks = this.callbacks.filter((cb) => cb.id !== id);
@@ -59,42 +59,58 @@ export class EventSubject<T = void> {
     }
 
     /**
-     * Trigger the event subject
+     * Trigger the event
      * @param value The value to pass to the callback
      * @returns void
      * @example
-     * const subject = new EventSubject<number>();
-     * const id = subject.subscribe((value:number) => {
+     * const event = new Notifier<number>();
+     * const id = event.subscribe((value:number) => {
      *   console.log(value);
      * });
-     * subject.next(1);
-     * subject.unsubscribe(id);
+     * event.notify(1);
+     * event.unsubscribe(id);
+     * @deprecated Use notify instead
      */
     next(value: T) {
         for (const callback of this.callbacks) callback.fn(value);
     }
-
     /**
-     * Trigger the error event subject
+     * Trigger the event
      * @param value The value to pass to the callback
      * @returns void
      * @example
-     * const subject = new EventSubject<number>();
-     * const id = subject.subscribe((value:number) => {
+     * const event = new Notifier<number>();
+     * const id = event.subscribe((value:number) => {
+     *   console.log(value);
+     * });
+     * event.notify(1);
+     * event.unsubscribe(id);
+     */
+    notify(value: T) {
+        this.next(value);
+    }
+
+    /**
+     * Trigger the error event event
+     * @param value The value to pass to the callback
+     * @returns void
+     * @example
+     * const event = new Notifier<number>();
+     * const id = event.subscribe((value:number) => {
      *   console.log(value);
      * }, (error) => {
      *  console.error(error);
      * });
-     * subject.error(new Error("It doesnt't work!"));
-     * subject.unsubscribe(id);
+     * event.error(new Error("It doesnt't work!"));
+     * event.unsubscribe(id);
      */
     error(value: Error) {
         for (const errorFn of this.errorFns) errorFn.fn(value);
     }
 
     /**
-     * Convert the event subject to a promise
-     * @description Convert the event subject to a promise.
+     * Convert the event to a promise
+     * @description Convert the event to a promise.
      * This is useful for the async/await style async pattern.
      * @returns Promise<T>
      * @example

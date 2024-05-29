@@ -12,7 +12,7 @@
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.WebzComponent = exports.HttpMethod = void 0;
 const WebzRouter_1 = __webpack_require__(/*! ./WebzRouter */ "./node_modules/@boots-edu/webz/WebzRouter.js");
-const eventsubject_1 = __webpack_require__(/*! ./eventsubject */ "./node_modules/@boots-edu/webz/eventsubject.js");
+const notifier_1 = __webpack_require__(/*! ./notifier */ "./node_modules/@boots-edu/webz/notifier.js");
 /**
  * @description An enum for the HTTP methods
  * @export
@@ -44,7 +44,7 @@ class WebzComponent {
     /**
      * @description An event that fires when the window is resized
      * @readonly
-     * @type {EventSubject<SizeInfo>}
+     * @type {Notifier<SizeInfo>}
      * @memberof WebzComponent
      * @example this.onResizeEvent.subscribe((sizeInfo) => {
      *  console.log(sizeInfo.windowWidth);
@@ -89,7 +89,7 @@ class WebzComponent {
         this.shadow.appendChild(this.template.content.cloneNode(true));
         if (!window.onresize) {
             window.onresize = () => {
-                WebzComponent.resizeEvent.next({
+                WebzComponent.resizeEvent.notify({
                     windowWidth: window.innerWidth,
                     windowHeight: window.innerHeight,
                 });
@@ -188,7 +188,7 @@ class WebzComponent {
      * });
      */
     static ajax(url, method, headers = [], data) {
-        const evt = new eventsubject_1.EventSubject();
+        const evt = new notifier_1.Notifier();
         const xhr = new XMLHttpRequest();
         xhr.open(method, url);
         for (let header of headers) {
@@ -199,7 +199,7 @@ class WebzComponent {
         }
         xhr.onload = () => {
             if (xhr.status >= 200 && xhr.status < 300) {
-                evt.next(JSON.parse(xhr.responseText));
+                evt.notify(JSON.parse(xhr.responseText));
             }
             else {
                 evt.error(new Error(xhr.statusText));
@@ -265,7 +265,7 @@ class WebzComponent {
     }
 }
 exports.WebzComponent = WebzComponent;
-WebzComponent.resizeEvent = new eventsubject_1.EventSubject();
+WebzComponent.resizeEvent = new notifier_1.Notifier();
 
 
 /***/ }),
@@ -281,7 +281,7 @@ WebzComponent.resizeEvent = new eventsubject_1.EventSubject();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.WebzDialog = exports.popupDialog = void 0;
 const WebzComponent_1 = __webpack_require__(/*! ./WebzComponent */ "./node_modules/@boots-edu/webz/WebzComponent.js");
-const eventsubject_1 = __webpack_require__(/*! ./eventsubject */ "./node_modules/@boots-edu/webz/eventsubject.js");
+const notifier_1 = __webpack_require__(/*! ./notifier */ "./node_modules/@boots-edu/webz/notifier.js");
 /** @hidden */
 exports.popupDialog = undefined;
 const alertDialogTempalte = `
@@ -368,7 +368,7 @@ class WebzDialog extends WebzComponent_1.WebzComponent {
      */
     constructor(html = "", css = "") {
         super(html, css);
-        this.closeEvent = new eventsubject_1.EventSubject();
+        this.closeEvent = new notifier_1.Notifier();
         const styleEl = window.document.createElement("style");
         styleEl.innerHTML = backgroundTemplate + popupTemplate;
         this["shadow"].appendChild(styleEl);
@@ -423,7 +423,7 @@ class WebzDialog extends WebzComponent_1.WebzComponent {
      * @param {string} [title="Alert"] The title of the dialog
      * @param {string[]} [buttons=["Ok"]] The buttons to display
      * @param {string} [btnClass=""] The class to apply to the buttons
-     * @returns {EventSubject<string>} The event subject that is triggered when the dialog is closed
+     * @returns {Notifier<string>} The event subject that is triggered when the dialog is closed
      * @memberof WebzDialog
      * @example
      * WebzDialog.popup("Hello World", "Alert", ["Ok","Cancel"], "btn btn-primary")
@@ -455,7 +455,7 @@ class WebzDialog extends WebzComponent_1.WebzComponent {
                 button.style.marginLeft = "10px";
                 button.addEventListener("click", () => {
                     dialog.show(false);
-                    dialog.closeEvent.next(button.value);
+                    dialog.closeEvent.notify(button.value);
                 });
                 this.popupButtons.push(button);
                 buttonDiv.appendChild(button);
@@ -530,7 +530,7 @@ exports.WebzRouter = WebzRouter;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.BindStyleToNumberAppendPx = exports.BindStyleToNumber = exports.BindValueToNumber = exports.BindCheckedToBoolean = exports.BindVisibleToBoolean = exports.BindDisabledToBoolean = exports.BindCSSClassToBoolean = exports.BindList = exports.BindAttribute = exports.BindValue = exports.BindCSSClass = exports.BindStyle = void 0;
-const eventsubject_1 = __webpack_require__(/*! ./eventsubject */ "./node_modules/@boots-edu/webz/eventsubject.js");
+const notifier_1 = __webpack_require__(/*! ./notifier */ "./node_modules/@boots-edu/webz/notifier.js");
 /**
  * @description Gets the public key of the field name
  * @param name the name of the field
@@ -732,7 +732,7 @@ function recreateBoundList(arr, element, overwrite, listItemId) {
             sibs[i].innerHTML = v;
     });
 }
-const boundProxyRebuild = new eventsubject_1.EventSubject();
+const boundProxyRebuild = new notifier_1.Notifier();
 /**
  * @description Creates a proxy object that will update the bound list when the array is modified
  * @param array the array to proxy
@@ -745,7 +745,7 @@ function boundProxyFactory(array) {
         set(target, prop, value) {
             if (prop !== "length") {
                 target[prop] = value;
-                boundProxyRebuild.next();
+                boundProxyRebuild.notify();
                 //recreateBoundList(target, element);
             }
             return true;
@@ -767,7 +767,7 @@ function boundProxyFactory(array) {
                 const origMethod = target[prop];
                 return function (...args) {
                     origMethod.apply(target, args);
-                    boundProxyRebuild.next();
+                    boundProxyRebuild.notify();
                     //recreateBoundList(target, element);
                 };
             }
@@ -1326,126 +1326,6 @@ exports.Timer = Timer;
 
 /***/ }),
 
-/***/ "./node_modules/@boots-edu/webz/eventsubject.js":
-/*!******************************************************!*\
-  !*** ./node_modules/@boots-edu/webz/eventsubject.js ***!
-  \******************************************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.EventSubject = void 0;
-/**
- * EventSubject
- * @description A class for creating event subjects
- * @export
- * @class EventSubject
- * @group Async Event Sources
- */
-class EventSubject {
-    constructor() {
-        this.refCount = 0;
-        this.callbacks = [];
-        this.errorFns = [];
-    }
-    /**
-     * Subscribe to the event subject
-     * @param callback The callback to call when the event is triggered
-     * @param error The callback to call when an error is triggered
-     * @returns The id of the subscription
-     * @example
-     * const subject = new EventSubject<number>();
-     * const id = subject.subscribe((value:number) => {
-     *  console.log(value);
-     * });
-     * subject.next(1);
-     * subject.unsubscribe(id);
-     */
-    subscribe(callback, error) {
-        this.callbacks.push({ id: this.refCount, fn: callback });
-        if (error)
-            this.errorFns.push({ id: this.refCount, fn: error });
-        return this.refCount++;
-    }
-    /**
-     * Unsubscribe from the event subject
-     * @param id The id of the subscription to remove
-     * @returns void
-     * @example
-     * const subject = new EventSubject<number>();
-     * const id = subject.subscribe((value:number) => {
-     *   console.log(value);
-     * });
-     * subject.next(1);
-     * subject.unsubscribe(id);
-     */
-    unsubscribe(id) {
-        this.callbacks = this.callbacks.filter((cb) => cb.id !== id);
-        this.errorFns = this.errorFns.filter((cb) => cb.id !== id);
-    }
-    /**
-     * Trigger the event subject
-     * @param value The value to pass to the callback
-     * @returns void
-     * @example
-     * const subject = new EventSubject<number>();
-     * const id = subject.subscribe((value:number) => {
-     *   console.log(value);
-     * });
-     * subject.next(1);
-     * subject.unsubscribe(id);
-     */
-    next(value) {
-        for (const callback of this.callbacks)
-            callback.fn(value);
-    }
-    /**
-     * Trigger the error event subject
-     * @param value The value to pass to the callback
-     * @returns void
-     * @example
-     * const subject = new EventSubject<number>();
-     * const id = subject.subscribe((value:number) => {
-     *   console.log(value);
-     * }, (error) => {
-     *  console.error(error);
-     * });
-     * subject.error(new Error("It doesnt't work!"));
-     * subject.unsubscribe(id);
-     */
-    error(value) {
-        for (const errorFn of this.errorFns)
-            errorFn.fn(value);
-    }
-    /**
-     * Convert the event subject to a promise
-     * @description Convert the event subject to a promise.
-     * This is useful for the async/await style async pattern.
-     * @returns Promise<T>
-     * @example
-     * async myFunction() {
-     *   const result=await WebzDialog.popup(
-     *     "Hello World",
-     *     "Alert", ["Ok","Cancel"]).toPromise();
-     *   console.log(result);
-     * }
-     */
-    toPromise() {
-        return new Promise((resolve, reject) => {
-            this.subscribe((value) => {
-                resolve(value);
-            }, (error) => {
-                reject(error);
-            });
-        });
-    }
-}
-exports.EventSubject = EventSubject;
-
-
-/***/ }),
-
 /***/ "./node_modules/@boots-edu/webz/index.js":
 /*!***********************************************!*\
   !*** ./node_modules/@boots-edu/webz/index.js ***!
@@ -1474,8 +1354,144 @@ __exportStar(__webpack_require__(/*! ./event.decorators */ "./node_modules/@boot
 __exportStar(__webpack_require__(/*! ./WebzComponent */ "./node_modules/@boots-edu/webz/WebzComponent.js"), exports);
 __exportStar(__webpack_require__(/*! ./WebzDialog */ "./node_modules/@boots-edu/webz/WebzDialog.js"), exports);
 __exportStar(__webpack_require__(/*! ./WebzRouter */ "./node_modules/@boots-edu/webz/WebzRouter.js"), exports);
-__exportStar(__webpack_require__(/*! ./eventsubject */ "./node_modules/@boots-edu/webz/eventsubject.js"), exports);
+__exportStar(__webpack_require__(/*! ./notifier */ "./node_modules/@boots-edu/webz/notifier.js"), exports);
 __exportStar(__webpack_require__(/*! ./bootstrap */ "./node_modules/@boots-edu/webz/bootstrap.js"), exports);
+
+
+/***/ }),
+
+/***/ "./node_modules/@boots-edu/webz/notifier.js":
+/*!**************************************************!*\
+  !*** ./node_modules/@boots-edu/webz/notifier.js ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Notifier = void 0;
+/**
+ * Notifier
+ * @description A class for creating events
+ * @export
+ * @class Notifier
+ * @group Async Event Sources
+ */
+class Notifier {
+    constructor() {
+        this.refCount = 0;
+        this.callbacks = [];
+        this.errorFns = [];
+    }
+    /**
+     * Subscribe to the event
+     * @param callback The callback to call when the event is triggered
+     * @param error The callback to call when an error is triggered
+     * @returns The id of the subscription
+     * @example
+     * const event = new Notifier<number>();
+     * const id = event.subscribe((value:number) => {
+     *  console.log(value);
+     * });
+     * event.notify(1);
+     * event.unsubscribe(id);
+     */
+    subscribe(callback, error) {
+        this.callbacks.push({ id: this.refCount, fn: callback });
+        if (error)
+            this.errorFns.push({ id: this.refCount, fn: error });
+        return this.refCount++;
+    }
+    /**
+     * Unsubscribe from the event
+     * @param id The id of the subscription to remove
+     * @returns void
+     * @example
+     * const event = new Notifier<number>();
+     * const id = event.subscribe((value:number) => {
+     *   console.log(value);
+     * });
+     * event.notify(1);
+     * event.unsubscribe(id);
+     */
+    unsubscribe(id) {
+        this.callbacks = this.callbacks.filter((cb) => cb.id !== id);
+        this.errorFns = this.errorFns.filter((cb) => cb.id !== id);
+    }
+    /**
+     * Trigger the event
+     * @param value The value to pass to the callback
+     * @returns void
+     * @example
+     * const event = new Notifier<number>();
+     * const id = event.subscribe((value:number) => {
+     *   console.log(value);
+     * });
+     * event.notify(1);
+     * event.unsubscribe(id);
+     * @deprecated Use notify instead
+     */
+    next(value) {
+        for (const callback of this.callbacks)
+            callback.fn(value);
+    }
+    /**
+     * Trigger the event
+     * @param value The value to pass to the callback
+     * @returns void
+     * @example
+     * const event = new Notifier<number>();
+     * const id = event.subscribe((value:number) => {
+     *   console.log(value);
+     * });
+     * event.notify(1);
+     * event.unsubscribe(id);
+     */
+    notify(value) {
+        this.next(value);
+    }
+    /**
+     * Trigger the error event event
+     * @param value The value to pass to the callback
+     * @returns void
+     * @example
+     * const event = new Notifier<number>();
+     * const id = event.subscribe((value:number) => {
+     *   console.log(value);
+     * }, (error) => {
+     *  console.error(error);
+     * });
+     * event.error(new Error("It doesnt't work!"));
+     * event.unsubscribe(id);
+     */
+    error(value) {
+        for (const errorFn of this.errorFns)
+            errorFn.fn(value);
+    }
+    /**
+     * Convert the event to a promise
+     * @description Convert the event to a promise.
+     * This is useful for the async/await style async pattern.
+     * @returns Promise<T>
+     * @example
+     * async myFunction() {
+     *   const result=await WebzDialog.popup(
+     *     "Hello World",
+     *     "Alert", ["Ok","Cancel"]).toPromise();
+     *   console.log(result);
+     * }
+     */
+    toPromise() {
+        return new Promise((resolve, reject) => {
+            this.subscribe((value) => {
+                resolve(value);
+            }, (error) => {
+                reject(error);
+            });
+        });
+    }
+}
+exports.Notifier = Notifier;
 
 
 /***/ }),
@@ -2402,7 +2418,7 @@ const taskeditor_component_css_1 = __importDefault(__webpack_require__(/*! ./tas
  * @description Component for editing a task.
  * @class TaskEditorComponent
  * @extends {WebzComponent}
- * @property {EventSubject<boolean>} editClose - event subject for the close event.  true if the save button was clicked, false if the cancel button was clicked.
+ * @property {Notifier<boolean>} editClose - event subject for the close event.  true if the save button was clicked, false if the cancel button was clicked.
  * @memberof TaskEditorComponent
  */
 let TaskeditorComponent = (() => {
@@ -2438,7 +2454,7 @@ let TaskeditorComponent = (() => {
                 this.tasks = (__runInitializers(this, _instanceExtraInitializers), tasks);
                 this.tasktext = __runInitializers(this, _tasktext_initializers, "");
                 this.saveDisabled = (__runInitializers(this, _tasktext_extraInitializers), __runInitializers(this, _saveDisabled_initializers, true));
-                this.editClose = (__runInitializers(this, _saveDisabled_extraInitializers), new webz_1.EventSubject());
+                this.editClose = (__runInitializers(this, _saveDisabled_extraInitializers), new webz_1.Notifier());
                 this.tasktext = tasks.taskText;
             }
             /**
@@ -2446,7 +2462,7 @@ let TaskeditorComponent = (() => {
              */
             onSave() {
                 this.tasks.taskText = this.tasktext;
-                this.editClose.next(true);
+                this.editClose.notify(true);
             }
             /**
              * @description event handler for the cancel button.  emits the editClose event with false.
@@ -2454,7 +2470,7 @@ let TaskeditorComponent = (() => {
              */
             onCancel() {
                 this.tasktext = this.tasks.taskText;
-                this.editClose.next(false);
+                this.editClose.notify(false);
             }
             focusInput() {
                 this.focus("tasktext");
@@ -2538,9 +2554,9 @@ const taskviewer_component_1 = __webpack_require__(/*! ../taskviewer/taskviewer.
  * @description Component for a single task line.
  * @class TaskLineComponent
  * @extends {WebzComponent}
- * @property {EventSubject<void>} lineEdit - event subject for the edit event.
- * @property {EventSubject<boolean>} lineEditClose - event subject for the close event.  true if the save button was clicked, false if the cancel button was clicked.
- * @property {EventSubject<TaskData>} lineDelete - event subject for the delete event.
+ * @property {Notifier<void>} lineEdit - event subject for the edit event.
+ * @property {Notifier<boolean>} lineEditClose - event subject for the close event.  true if the save button was clicked, false if the cancel button was clicked.
+ * @property {Notifier<TaskData>} lineDelete - event subject for the delete event.
  * @property {TaskData} data - the task data for the line.
  * @method {disableViewButtons} - disables the view buttons.
  * @method {disableEditing} - disables editing.
@@ -2562,7 +2578,7 @@ let TasklineComponent = (() => {
                 this.editorVisible = value ? "visible" : "hidden";
                 this.viewerVisible = value ? "hidden" : "visible";
                 this.editor.focusInput();
-                this.lineEdit.next();
+                this.lineEdit.notify();
             }
             get editing() {
                 return this._editing;
@@ -2576,9 +2592,9 @@ let TasklineComponent = (() => {
                 this.editorVisible = __runInitializers(this, _editorVisible_initializers, "hidden");
                 this.viewerVisible = (__runInitializers(this, _editorVisible_extraInitializers), __runInitializers(this, _viewerVisible_initializers, "hidden"));
                 //event sources
-                this.lineEdit = (__runInitializers(this, _viewerVisible_extraInitializers), new webz_1.EventSubject());
-                this.lineEditClose = new webz_1.EventSubject();
-                this.lineDelete = new webz_1.EventSubject();
+                this.lineEdit = (__runInitializers(this, _viewerVisible_extraInitializers), new webz_1.Notifier());
+                this.lineEditClose = new webz_1.Notifier();
+                this.lineDelete = new webz_1.Notifier();
                 this._editing = false;
                 this.editor = new taskeditor_component_1.TaskeditorComponent(taskData);
                 this.viewer = new taskviewer_component_1.TaskviewerComponent(taskData);
@@ -2592,17 +2608,17 @@ let TasklineComponent = (() => {
                 this.editor.editClose.subscribe((save) => {
                     this.editing = false;
                     this.viewer.setData(this.taskData);
-                    this.lineEditClose.next(save);
+                    this.lineEditClose.notify(save);
                 });
             }
             wireUpViewer() {
                 //if delete is clicked bubble event up.
                 //if edit is clicked, then disable all other buttons and enable the editor
                 this.viewer.deleting.subscribe(() => {
-                    this.lineDelete.next(this.taskData);
+                    this.lineDelete.notify(this.taskData);
                 });
                 this.viewer.editing.subscribe(() => {
-                    this.lineEdit.next();
+                    this.lineEdit.notify();
                     this.editing = true;
                 });
             }
@@ -2688,7 +2704,7 @@ const guid_1 = __importDefault(__webpack_require__(/*! guid */ "./node_modules/g
  * @description Top level component of the task list.
  * @class TasksComponent
  * @extends {WebzComponent}
- * @property {EventSubject<TaskData[]>} saveData - event subject for the save event.  emits the task data when the save event is triggered.
+ * @property {Notifier<TaskData[]>} saveData - event subject for the save event.  emits the task data when the save event is triggered.
  * @memberof TasksComponent
  */
 let TasksComponent = (() => {
@@ -2755,13 +2771,13 @@ let TasksComponent = (() => {
                 /**
                  * @description Event subject for the save event.  emits the task data when the save event is triggered.
                  * @memberof TasksComponent
-                 * @type {EventSubject<TaskData[]>}
+                 * @type {Notifier<TaskData[]>}
                  * @example
                  * this.saveData.subscribe((data) => {
                  *    console.log(data);
                  * });
                  */
-                this.saveData = new webz_1.EventSubject();
+                this.saveData = new webz_1.Notifier();
                 this.addDisabled = "";
                 this.taskData = data;
             }
@@ -2797,13 +2813,13 @@ let TasksComponent = (() => {
                                 this.removeComponent(task);
                             });
                             this.taskLines = [];
-                            this.saveData.next(this.taskData);
+                            this.saveData.notify(this.taskData);
                         }
                     });
                 }
             }
             /**
-             * @description Connects the taskLine EventSubjects to the TasksComponent.
+             * @description Connects the taskLine Notifiers to the TasksComponent.
              * @memberof TasksComponent
              * @method onDeleteAllTasks
              * @param {TasklineComponent} line - the task line to connect the events to.
@@ -2826,7 +2842,7 @@ let TasksComponent = (() => {
                 line.lineDelete.subscribe(() => {
                     this.removeComponent(line);
                     this.taskLines.splice(this.taskLines.indexOf(line), 1);
-                    this.saveData.next(this.taskData);
+                    this.saveData.notify(this.taskData);
                 });
                 //if we are closing editor, then we want to enable the add button and all child edit/cancel buttons
                 line.lineEditClose.subscribe((save) => {
@@ -2839,7 +2855,7 @@ let TasksComponent = (() => {
                             line.data.uniqueID = guid_1.default.create();
                         }
                         //save the data to a datasource
-                        this.saveData.next(this.taskData);
+                        this.saveData.notify(this.taskData);
                     }
                     else if (line.data.uniqueID === undefined) {
                         this.removeComponent(line);
@@ -2937,8 +2953,8 @@ const taskviewer_component_css_1 = __importDefault(__webpack_require__(/*! ./tas
  * @description Component for viewing a task.
  * @class TaskViewerComponent
  * @extends {WebzComponent}
- * @property {EventSubject<void>} editing - event subject for the edit event.
- * @property {EventSubject<void>} deleting - event subject for the delete event.
+ * @property {Notifier<void>} editing - event subject for the edit event.
+ * @property {Notifier<void>} deleting - event subject for the delete event.
  * @property {TaskData} data - the task data for the viewer.
  * @method {setData} - sets the task data for the viewer.
  * @method {disableButtons} - disables the buttons.
@@ -2969,8 +2985,8 @@ let TaskviewerComponent = (() => {
                 super(taskviewer_component_html_1.default, taskviewer_component_css_1.default);
                 this.data = (__runInitializers(this, _instanceExtraInitializers), data);
                 //event sources
-                this.editing = new webz_1.EventSubject();
-                this.deleting = new webz_1.EventSubject();
+                this.editing = new webz_1.Notifier();
+                this.deleting = new webz_1.Notifier();
                 this.taskview = __runInitializers(this, _taskview_initializers, "");
                 this.editDisabled = (__runInitializers(this, _taskview_extraInitializers), __runInitializers(this, _editDisabled_initializers, ""));
                 this.deleteDisabled = (__runInitializers(this, _editDisabled_extraInitializers), __runInitializers(this, _deleteDisabled_initializers, ""));
@@ -2983,7 +2999,7 @@ let TaskviewerComponent = (() => {
              * @memberof TaskViewerComponent
              */
             onEdit() {
-                this.editing.next();
+                this.editing.notify();
             }
             /**
              * @description event handler for the delete button.  emits the deleting event.
@@ -2992,7 +3008,7 @@ let TaskviewerComponent = (() => {
             onDelete() {
                 webz_1.WebzDialog.popup(this, "Are you sure you want to delete this task?", "Confirm Delete", ["Yes", "No", "Cancel"], "btn btn-primary").subscribe((result) => {
                     if (result === "Yes")
-                        this.deleting.next();
+                        this.deleting.notify();
                 });
             }
             /**

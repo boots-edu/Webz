@@ -1,4 +1,4 @@
-# Webz - A simple web framework for Typescript (0.9.8)
+# Webz - A simple web framework for Typescript (0.9.11)
 
 ## Getting Started
 
@@ -553,8 +553,8 @@ Click the element on the current component by id.  This is useful for testing.
 ```
 this.click('button1')
 ```
-### ajax\<T>(url,method,headers,data):EventSubject\<T>
-This allows you to make an asyncronous call and will return an EventSubject<T> for you to subscribe.  The eventsource will fire the subscription when the request is complete.
+### ajax\<T>(url,method,headers,data):Notifier\<T>
+This allows you to make an asyncronous call and will return a Notifier<T> for you to subscribe.  The eventsource will fire the subscription when the request is complete.
 ```
 this.ajax<UserRecord>("https://www.udel.edu",HttpMethod.GET)
     .subscribe((result:UserRecord)=>{
@@ -570,7 +570,7 @@ const request=this.ajax<boolean>("http://api.test.com",HttpMethod.POST,[],userRe
 ```
 ## Other types of components
 ### WebzDialog
-This WebzComponent derived class allows you to create popup dialogs just like other components.  Your component just shows up in the middle of the dialog.  You can hide or show your dialog with ```this.show(true|false)```.  There is also a utility static method ```popup``` that you can use for a quick alert or confirm message.  It returns an EventSubject whose subscription is called when the dialog closes with the value of the button pressed (i.e. the text on the button).
+This WebzComponent derived class allows you to create popup dialogs just like other components.  Your component just shows up in the middle of the dialog.  You can hide or show your dialog with ```this.show(true|false)```.  There is also a utility static method ```popup``` that you can use for a quick alert or confirm message.  It returns a Notifier whose subscription is called when the dialog closes with the value of the button pressed (i.e. the text on the button).
 ```
 Webz dialog editor
 ```
@@ -632,10 +632,10 @@ You can change pages in code by calling the route method and passing it the path
     this.router?.route("/about");
 ```
 ## Utility Classes
-### EventSubject
-The ```EventSubject``` class can be used to handle asynchronous code. You can either ```subscribe``` to it or convert it to a promise with the ```toPromise``` method.  Many functions in ```Webz``` return an ```EventSubject``` that you can subscribe to.
+### Notifier
+The ```Notifier``` class can be used to handle asynchronous code. You can either ```subscribe``` to it or convert it to a promise with the ```toPromise``` method.  Many functions in ```Webz``` return a ```Notifier``` that you can subscribe to.
 ```
-event:EventSubject<boolean> = new EventSubject<boolean>();
+event:Notifier<boolean> = new Notifier<boolean>();
 event.subscribe((result:boolean)=>{
     console.log(result);
 },(err:Error)=>{
@@ -644,8 +644,13 @@ event.subscribe((result:boolean)=>{
 ```
 or
 ```
-event:EventSubject<boolean> = new EventSubject<boolean>();
+event:Notifier<boolean> = new Notifier<boolean>();
 let result:boolean = await event.toPromise();
+```
+Trigger the notifier with
+```
+event:Notifier<boolean> = new Notifier<boolean>();
+event.notify(true);
 ```
 
 ## Working example program

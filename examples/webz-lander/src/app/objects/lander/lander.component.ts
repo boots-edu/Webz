@@ -3,7 +3,7 @@ import css from "./lander.component.css";
 import {
     BindStyle,
     BindStyleToNumberAppendPx,
-    EventSubject,
+    Notifier,
     WebzComponent,
     Timer,
     WindowEvent,
@@ -18,7 +18,7 @@ import { HudComponent } from "../hud/hud.component";
  * @class
  * @extends WebzComponent
 
- * @property {EventSubject<GameStatus>} gameOver - The game over event
+ * @property {Notifier<GameStatus>} gameOver - The game over event
  */
 export class LanderComponent extends WebzComponent {
     /**
@@ -249,11 +249,11 @@ export class LanderComponent extends WebzComponent {
 
     /**
      * @description The game over event
-     * @type {EventSubject<GameStatus>}
+     * @type {Notifier<GameStatus>}
      * @private
      * @memberof LanderComponent
      */
-    gameOver: EventSubject<GameStatus> = new EventSubject<GameStatus>();
+    gameOver: Notifier<GameStatus> = new Notifier<GameStatus>();
 
     /**
      * @description The terrain altitude
@@ -458,7 +458,7 @@ export class LanderComponent extends WebzComponent {
     private stopFlying(stopType: GameStatus) {
         this.flying = false;
         this.hud.status = stopType;
-        this.gameOver.next(stopType);
+        this.gameOver.notify(stopType);
     }
 
     /**

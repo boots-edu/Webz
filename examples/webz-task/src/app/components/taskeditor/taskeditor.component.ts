@@ -1,7 +1,7 @@
 import {
     Click,
     WebzComponent,
-    EventSubject,
+    Notifier,
     BindValue,
     Input,
     BindDisabledToBoolean,
@@ -25,7 +25,7 @@ export interface TaskData {
  * @description Component for editing a task.
  * @class TaskEditorComponent
  * @extends {WebzComponent}
- * @property {EventSubject<boolean>} editClose - event subject for the close event.  true if the save button was clicked, false if the cancel button was clicked.
+ * @property {Notifier<boolean>} editClose - event subject for the close event.  true if the save button was clicked, false if the cancel button was clicked.
  * @memberof TaskEditorComponent
  */
 export class TaskeditorComponent extends WebzComponent {
@@ -43,7 +43,7 @@ export class TaskeditorComponent extends WebzComponent {
         this.saveDisabled = this.tasktext === "";
     }
 
-    editClose: EventSubject<boolean> = new EventSubject<boolean>();
+    editClose: Notifier<boolean> = new Notifier<boolean>();
 
     /**
      * @description Creates an instance of TaskEditorComponent.
@@ -60,7 +60,7 @@ export class TaskeditorComponent extends WebzComponent {
      */
     @Click("save") private onSave() {
         this.tasks.taskText = this.tasktext;
-        this.editClose.next(true);
+        this.editClose.notify(true);
     }
 
     /**
@@ -69,7 +69,7 @@ export class TaskeditorComponent extends WebzComponent {
      */
     @Click("cancel") private onCancel() {
         this.tasktext = this.tasks.taskText;
-        this.editClose.next(false);
+        this.editClose.notify(false);
     }
 
     focusInput() {

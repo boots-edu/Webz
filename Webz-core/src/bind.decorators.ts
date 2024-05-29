@@ -1,5 +1,5 @@
 import { WebzComponent } from "./WebzComponent";
-import { EventSubject } from "./eventsubject";
+import { Notifier } from "./notifier";
 
 /**
  * @description Gets the public key of the field name
@@ -235,7 +235,7 @@ function recreateBoundList(
     });
 }
 
-const boundProxyRebuild: EventSubject = new EventSubject();
+const boundProxyRebuild: Notifier = new Notifier();
 /**
  * @description Creates a proxy object that will update the bound list when the array is modified
  * @param array the array to proxy
@@ -248,7 +248,7 @@ function boundProxyFactory(array: string[]) {
         set(target: string[], prop: any, value: string) {
             if (prop !== "length") {
                 target[prop] = value;
-                boundProxyRebuild.next();
+                boundProxyRebuild.notify();
                 //recreateBoundList(target, element);
             }
             return true;
@@ -271,7 +271,7 @@ function boundProxyFactory(array: string[]) {
 
                 return function (...args: any[]) {
                     origMethod.apply(target, args);
-                    boundProxyRebuild.next();
+                    boundProxyRebuild.notify();
                     //recreateBoundList(target, element);
                 };
             }

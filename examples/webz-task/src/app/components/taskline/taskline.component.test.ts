@@ -17,13 +17,13 @@ describe("TasklineComponent", () => {
     describe("Wire ups", () => {
         test("Wire up editor", () => {
             expect(component).toBeInstanceOf(TasklineComponent);
-            component["editor"].editClose.next(true);
+            component["editor"].editClose.notify(true);
             expect(component.editing).toBe(false);
         });
         test("Wire up viewer", () => {
             expect(component).toBeInstanceOf(TasklineComponent);
-            component["viewer"].deleting.next();
-            component["viewer"].editing.next();
+            component["viewer"].deleting.notify();
+            component["viewer"].editing.notify();
             expect(component.editing).toBe(true);
         });
     });

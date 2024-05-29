@@ -53,13 +53,13 @@ describe("TasksComponent", () => {
             expect(component.taskLines.length).toBe(0);
         });
     });
-    describe("EventSubject tests", () => {
+    describe("Notifier tests", () => {
         test("lineDelete", async () => {
             expect(component).toBeInstanceOf(TasksComponent);
             component.taskData = [{ taskText: "test" }];
             expect(component.taskLines.length).toBe(1);
             const line = component.taskLines[0] as TasklineComponent;
-            line.lineDelete.next(line.data);
+            line.lineDelete.notify(line.data);
             expect(component.taskLines.length).toBe(0);
         });
         test("lineEditClose", async () => {
@@ -67,7 +67,7 @@ describe("TasksComponent", () => {
             component.taskData = [{ taskText: "test" }];
             expect(component.taskLines.length).toBe(1);
             const line = component.taskLines[0] as TasklineComponent;
-            line.lineEditClose.next(true);
+            line.lineEditClose.notify(true);
             expect(line.data.uniqueID).toBeDefined();
             component.saveData.subscribe(
                 (data: TaskData[]) => {
@@ -79,7 +79,7 @@ describe("TasksComponent", () => {
                 },
             );
             component.taskLines[0].data.uniqueID = undefined;
-            line.lineEditClose.next(false);
+            line.lineEditClose.notify(false);
             expect(component.taskLines.length).toBe(0);
         });
     });

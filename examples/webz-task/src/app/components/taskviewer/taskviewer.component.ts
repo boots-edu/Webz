@@ -2,7 +2,7 @@ import {
     BindCSSClass,
     BindValue,
     Click,
-    EventSubject,
+    Notifier,
     WebzComponent,
     WebzDialog,
 } from "@boots-edu/webz";
@@ -14,8 +14,8 @@ import { TaskData } from "../taskeditor/taskeditor.component";
  * @description Component for viewing a task.
  * @class TaskViewerComponent
  * @extends {WebzComponent}
- * @property {EventSubject<void>} editing - event subject for the edit event.
- * @property {EventSubject<void>} deleting - event subject for the delete event.
+ * @property {Notifier<void>} editing - event subject for the edit event.
+ * @property {Notifier<void>} deleting - event subject for the delete event.
  * @property {TaskData} data - the task data for the viewer.
  * @method {setData} - sets the task data for the viewer.
  * @method {disableButtons} - disables the buttons.
@@ -23,8 +23,8 @@ import { TaskData } from "../taskeditor/taskeditor.component";
  */
 export class TaskviewerComponent extends WebzComponent {
     //event sources
-    editing: EventSubject<void> = new EventSubject<void>();
-    deleting: EventSubject<void> = new EventSubject<void>();
+    editing: Notifier<void> = new Notifier<void>();
+    deleting: Notifier<void> = new Notifier<void>();
 
     @BindValue("taskview")
     private taskview: string = "";
@@ -46,7 +46,7 @@ export class TaskviewerComponent extends WebzComponent {
      * @memberof TaskViewerComponent
      */
     @Click("edit") private onEdit() {
-        this.editing.next();
+        this.editing.notify();
     }
 
     /**
@@ -61,7 +61,7 @@ export class TaskviewerComponent extends WebzComponent {
             ["Yes", "No", "Cancel"],
             "btn btn-primary",
         ).subscribe((result) => {
-            if (result === "Yes") this.deleting.next();
+            if (result === "Yes") this.deleting.notify();
         });
     }
 

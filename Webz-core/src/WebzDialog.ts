@@ -1,5 +1,5 @@
 import { WebzComponent } from "./WebzComponent";
-import { EventSubject } from "./eventsubject";
+import { Notifier } from "./notifier";
 declare const window: Window;
 /** @hidden */
 export let popupDialog: WebzDialog | undefined = undefined;
@@ -80,7 +80,7 @@ const popupTemplate = `
 export class WebzDialog extends WebzComponent {
     private popup: HTMLDivElement;
     private background: HTMLDivElement;
-    private closeEvent: EventSubject<string> = new EventSubject<string>();
+    private closeEvent: Notifier<string> = new Notifier<string>();
     private static popupButtons: HTMLButtonElement[] = [];
 
     /**
@@ -149,7 +149,7 @@ export class WebzDialog extends WebzComponent {
      * @param {string} [title="Alert"] The title of the dialog
      * @param {string[]} [buttons=["Ok"]] The buttons to display
      * @param {string} [btnClass=""] The class to apply to the buttons
-     * @returns {EventSubject<string>} The event subject that is triggered when the dialog is closed
+     * @returns {Notifier<string>} The event subject that is triggered when the dialog is closed
      * @memberof WebzDialog
      * @example
      * WebzDialog.popup("Hello World", "Alert", ["Ok","Cancel"], "btn btn-primary")
@@ -166,7 +166,7 @@ export class WebzDialog extends WebzComponent {
         title: string = "Alert",
         buttons: string[] = ["Ok"],
         btnClass: string = "",
-    ): EventSubject<string> {
+    ): Notifier<string> {
         const dialog = new WebzDialog(alertDialogTempalte);
         popupDialog = dialog;
 
@@ -187,7 +187,7 @@ export class WebzDialog extends WebzComponent {
 
                 button.addEventListener("click", () => {
                     dialog.show(false);
-                    dialog.closeEvent.next(button.value);
+                    dialog.closeEvent.notify(button.value);
                 });
                 this.popupButtons.push(button);
                 buttonDiv.appendChild(button);

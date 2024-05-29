@@ -2,7 +2,7 @@ import {
     BindStyle,
     WebzComponent,
     Timer,
-    EventSubject,
+    Notifier,
     BindStyleToNumberAppendPx,
 } from "@boots-edu/webz";
 import html from "./ball.component.html";
@@ -122,10 +122,10 @@ export class BallComponent extends WebzComponent {
     /**
      * @description The event subject for game over
      * @public
-     * @type {EventSubject<void>}
+     * @type {Notifier<void>}
      * @memberof BallComponent
      */
-    public gameOver: EventSubject<void> = new EventSubject<void>();
+    public gameOver: Notifier<void> = new Notifier<void>();
 
     /**
      * @description The constructor for the ball component
@@ -204,7 +204,7 @@ export class BallComponent extends WebzComponent {
             if (newX < 0) {
                 this.ball_direction[0] = 1;
                 this.ball_x = -50;
-                this.gameOver.next();
+                this.gameOver.notify();
                 this.running = false;
             }
             if (newX > this.maxX) {

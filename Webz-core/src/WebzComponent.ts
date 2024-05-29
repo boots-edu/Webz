@@ -1,5 +1,5 @@
 import { WebzRouter, Route } from "./WebzRouter";
-import { EventSubject } from "./eventsubject";
+import { Notifier } from "./notifier";
 declare const window: Window;
 /**
  * @description An enum for the HTTP methods
@@ -52,20 +52,20 @@ export abstract class WebzComponent {
     private template: HTMLTemplateElement;
     private styles: HTMLStyleElement;
 
-    private static resizeEvent: EventSubject<SizeInfo> =
-        new EventSubject<SizeInfo>();
+    private static resizeEvent: Notifier<SizeInfo> =
+        new Notifier<SizeInfo>();
 
     /**
      * @description An event that fires when the window is resized
      * @readonly
-     * @type {EventSubject<SizeInfo>}
+     * @type {Notifier<SizeInfo>}
      * @memberof WebzComponent
      * @example this.onResizeEvent.subscribe((sizeInfo) => {
      *  console.log(sizeInfo.windowWidth);
      *  console.log(sizeInfo.windowHeight);
      * });
      */
-    public get onResizeEvent(): EventSubject<SizeInfo> {
+    public get onResizeEvent(): Notifier<SizeInfo> {
         return WebzComponent.resizeEvent;
     }
 
@@ -102,7 +102,7 @@ export abstract class WebzComponent {
         this.shadow.appendChild(this.template.content.cloneNode(true));
         if (!window.onresize) {
             window.onresize = () => {
-                WebzComponent.resizeEvent.next({
+                WebzComponent.resizeEvent.notify({
                     windowWidth: window.innerWidth,
                     windowHeight: window.innerHeight,
                 });
@@ -213,8 +213,8 @@ export abstract class WebzComponent {
         method: HttpMethod,
         headers: any[] = [],
         data?: any,
-    ): EventSubject<T> {
-        const evt: EventSubject<T> = new EventSubject<T>();
+    ): Notifier<T> {
+        const evt: Notifier<T> = new Notifier<T>();
         const xhr = new XMLHttpRequest();
         xhr.open(method, url);
         for (let header of headers) {
@@ -224,7 +224,7 @@ export abstract class WebzComponent {
         }
         xhr.onload = () => {
             if (xhr.status >= 200 && xhr.status < 300) {
-                evt.next(JSON.parse(xhr.responseText));
+                evt.notify(JSON.parse(xhr.responseText));
             } else {
                 evt.error(new Error(xhr.statusText));
             }

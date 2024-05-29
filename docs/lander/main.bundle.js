@@ -12,7 +12,7 @@
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.WebzComponent = exports.HttpMethod = void 0;
 const WebzRouter_1 = __webpack_require__(/*! ./WebzRouter */ "./node_modules/@boots-edu/webz/WebzRouter.js");
-const eventsubject_1 = __webpack_require__(/*! ./eventsubject */ "./node_modules/@boots-edu/webz/eventsubject.js");
+const notifier_1 = __webpack_require__(/*! ./notifier */ "./node_modules/@boots-edu/webz/notifier.js");
 /**
  * @description An enum for the HTTP methods
  * @export
@@ -44,7 +44,7 @@ class WebzComponent {
     /**
      * @description An event that fires when the window is resized
      * @readonly
-     * @type {EventSubject<SizeInfo>}
+     * @type {Notifier<SizeInfo>}
      * @memberof WebzComponent
      * @example this.onResizeEvent.subscribe((sizeInfo) => {
      *  console.log(sizeInfo.windowWidth);
@@ -89,7 +89,7 @@ class WebzComponent {
         this.shadow.appendChild(this.template.content.cloneNode(true));
         if (!window.onresize) {
             window.onresize = () => {
-                WebzComponent.resizeEvent.next({
+                WebzComponent.resizeEvent.notify({
                     windowWidth: window.innerWidth,
                     windowHeight: window.innerHeight,
                 });
@@ -188,7 +188,7 @@ class WebzComponent {
      * });
      */
     static ajax(url, method, headers = [], data) {
-        const evt = new eventsubject_1.EventSubject();
+        const evt = new notifier_1.Notifier();
         const xhr = new XMLHttpRequest();
         xhr.open(method, url);
         for (let header of headers) {
@@ -199,7 +199,7 @@ class WebzComponent {
         }
         xhr.onload = () => {
             if (xhr.status >= 200 && xhr.status < 300) {
-                evt.next(JSON.parse(xhr.responseText));
+                evt.notify(JSON.parse(xhr.responseText));
             }
             else {
                 evt.error(new Error(xhr.statusText));
@@ -265,7 +265,7 @@ class WebzComponent {
     }
 }
 exports.WebzComponent = WebzComponent;
-WebzComponent.resizeEvent = new eventsubject_1.EventSubject();
+WebzComponent.resizeEvent = new notifier_1.Notifier();
 
 
 /***/ }),
@@ -281,7 +281,7 @@ WebzComponent.resizeEvent = new eventsubject_1.EventSubject();
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.WebzDialog = exports.popupDialog = void 0;
 const WebzComponent_1 = __webpack_require__(/*! ./WebzComponent */ "./node_modules/@boots-edu/webz/WebzComponent.js");
-const eventsubject_1 = __webpack_require__(/*! ./eventsubject */ "./node_modules/@boots-edu/webz/eventsubject.js");
+const notifier_1 = __webpack_require__(/*! ./notifier */ "./node_modules/@boots-edu/webz/notifier.js");
 /** @hidden */
 exports.popupDialog = undefined;
 const alertDialogTempalte = `
@@ -368,7 +368,7 @@ class WebzDialog extends WebzComponent_1.WebzComponent {
      */
     constructor(html = "", css = "") {
         super(html, css);
-        this.closeEvent = new eventsubject_1.EventSubject();
+        this.closeEvent = new notifier_1.Notifier();
         const styleEl = window.document.createElement("style");
         styleEl.innerHTML = backgroundTemplate + popupTemplate;
         this["shadow"].appendChild(styleEl);
@@ -423,7 +423,7 @@ class WebzDialog extends WebzComponent_1.WebzComponent {
      * @param {string} [title="Alert"] The title of the dialog
      * @param {string[]} [buttons=["Ok"]] The buttons to display
      * @param {string} [btnClass=""] The class to apply to the buttons
-     * @returns {EventSubject<string>} The event subject that is triggered when the dialog is closed
+     * @returns {Notifier<string>} The event subject that is triggered when the dialog is closed
      * @memberof WebzDialog
      * @example
      * WebzDialog.popup("Hello World", "Alert", ["Ok","Cancel"], "btn btn-primary")
@@ -455,7 +455,7 @@ class WebzDialog extends WebzComponent_1.WebzComponent {
                 button.style.marginLeft = "10px";
                 button.addEventListener("click", () => {
                     dialog.show(false);
-                    dialog.closeEvent.next(button.value);
+                    dialog.closeEvent.notify(button.value);
                 });
                 this.popupButtons.push(button);
                 buttonDiv.appendChild(button);
@@ -530,7 +530,7 @@ exports.WebzRouter = WebzRouter;
 
 Object.defineProperty(exports, "__esModule", ({ value: true }));
 exports.BindStyleToNumberAppendPx = exports.BindStyleToNumber = exports.BindValueToNumber = exports.BindCheckedToBoolean = exports.BindVisibleToBoolean = exports.BindDisabledToBoolean = exports.BindCSSClassToBoolean = exports.BindList = exports.BindAttribute = exports.BindValue = exports.BindCSSClass = exports.BindStyle = void 0;
-const eventsubject_1 = __webpack_require__(/*! ./eventsubject */ "./node_modules/@boots-edu/webz/eventsubject.js");
+const notifier_1 = __webpack_require__(/*! ./notifier */ "./node_modules/@boots-edu/webz/notifier.js");
 /**
  * @description Gets the public key of the field name
  * @param name the name of the field
@@ -732,7 +732,7 @@ function recreateBoundList(arr, element, overwrite, listItemId) {
             sibs[i].innerHTML = v;
     });
 }
-const boundProxyRebuild = new eventsubject_1.EventSubject();
+const boundProxyRebuild = new notifier_1.Notifier();
 /**
  * @description Creates a proxy object that will update the bound list when the array is modified
  * @param array the array to proxy
@@ -745,7 +745,7 @@ function boundProxyFactory(array) {
         set(target, prop, value) {
             if (prop !== "length") {
                 target[prop] = value;
-                boundProxyRebuild.next();
+                boundProxyRebuild.notify();
                 //recreateBoundList(target, element);
             }
             return true;
@@ -767,7 +767,7 @@ function boundProxyFactory(array) {
                 const origMethod = target[prop];
                 return function (...args) {
                     origMethod.apply(target, args);
-                    boundProxyRebuild.next();
+                    boundProxyRebuild.notify();
                     //recreateBoundList(target, element);
                 };
             }
@@ -1326,126 +1326,6 @@ exports.Timer = Timer;
 
 /***/ }),
 
-/***/ "./node_modules/@boots-edu/webz/eventsubject.js":
-/*!******************************************************!*\
-  !*** ./node_modules/@boots-edu/webz/eventsubject.js ***!
-  \******************************************************/
-/***/ ((__unused_webpack_module, exports) => {
-
-"use strict";
-
-Object.defineProperty(exports, "__esModule", ({ value: true }));
-exports.EventSubject = void 0;
-/**
- * EventSubject
- * @description A class for creating event subjects
- * @export
- * @class EventSubject
- * @group Async Event Sources
- */
-class EventSubject {
-    constructor() {
-        this.refCount = 0;
-        this.callbacks = [];
-        this.errorFns = [];
-    }
-    /**
-     * Subscribe to the event subject
-     * @param callback The callback to call when the event is triggered
-     * @param error The callback to call when an error is triggered
-     * @returns The id of the subscription
-     * @example
-     * const subject = new EventSubject<number>();
-     * const id = subject.subscribe((value:number) => {
-     *  console.log(value);
-     * });
-     * subject.next(1);
-     * subject.unsubscribe(id);
-     */
-    subscribe(callback, error) {
-        this.callbacks.push({ id: this.refCount, fn: callback });
-        if (error)
-            this.errorFns.push({ id: this.refCount, fn: error });
-        return this.refCount++;
-    }
-    /**
-     * Unsubscribe from the event subject
-     * @param id The id of the subscription to remove
-     * @returns void
-     * @example
-     * const subject = new EventSubject<number>();
-     * const id = subject.subscribe((value:number) => {
-     *   console.log(value);
-     * });
-     * subject.next(1);
-     * subject.unsubscribe(id);
-     */
-    unsubscribe(id) {
-        this.callbacks = this.callbacks.filter((cb) => cb.id !== id);
-        this.errorFns = this.errorFns.filter((cb) => cb.id !== id);
-    }
-    /**
-     * Trigger the event subject
-     * @param value The value to pass to the callback
-     * @returns void
-     * @example
-     * const subject = new EventSubject<number>();
-     * const id = subject.subscribe((value:number) => {
-     *   console.log(value);
-     * });
-     * subject.next(1);
-     * subject.unsubscribe(id);
-     */
-    next(value) {
-        for (const callback of this.callbacks)
-            callback.fn(value);
-    }
-    /**
-     * Trigger the error event subject
-     * @param value The value to pass to the callback
-     * @returns void
-     * @example
-     * const subject = new EventSubject<number>();
-     * const id = subject.subscribe((value:number) => {
-     *   console.log(value);
-     * }, (error) => {
-     *  console.error(error);
-     * });
-     * subject.error(new Error("It doesnt't work!"));
-     * subject.unsubscribe(id);
-     */
-    error(value) {
-        for (const errorFn of this.errorFns)
-            errorFn.fn(value);
-    }
-    /**
-     * Convert the event subject to a promise
-     * @description Convert the event subject to a promise.
-     * This is useful for the async/await style async pattern.
-     * @returns Promise<T>
-     * @example
-     * async myFunction() {
-     *   const result=await WebzDialog.popup(
-     *     "Hello World",
-     *     "Alert", ["Ok","Cancel"]).toPromise();
-     *   console.log(result);
-     * }
-     */
-    toPromise() {
-        return new Promise((resolve, reject) => {
-            this.subscribe((value) => {
-                resolve(value);
-            }, (error) => {
-                reject(error);
-            });
-        });
-    }
-}
-exports.EventSubject = EventSubject;
-
-
-/***/ }),
-
 /***/ "./node_modules/@boots-edu/webz/index.js":
 /*!***********************************************!*\
   !*** ./node_modules/@boots-edu/webz/index.js ***!
@@ -1474,8 +1354,144 @@ __exportStar(__webpack_require__(/*! ./event.decorators */ "./node_modules/@boot
 __exportStar(__webpack_require__(/*! ./WebzComponent */ "./node_modules/@boots-edu/webz/WebzComponent.js"), exports);
 __exportStar(__webpack_require__(/*! ./WebzDialog */ "./node_modules/@boots-edu/webz/WebzDialog.js"), exports);
 __exportStar(__webpack_require__(/*! ./WebzRouter */ "./node_modules/@boots-edu/webz/WebzRouter.js"), exports);
-__exportStar(__webpack_require__(/*! ./eventsubject */ "./node_modules/@boots-edu/webz/eventsubject.js"), exports);
+__exportStar(__webpack_require__(/*! ./notifier */ "./node_modules/@boots-edu/webz/notifier.js"), exports);
 __exportStar(__webpack_require__(/*! ./bootstrap */ "./node_modules/@boots-edu/webz/bootstrap.js"), exports);
+
+
+/***/ }),
+
+/***/ "./node_modules/@boots-edu/webz/notifier.js":
+/*!**************************************************!*\
+  !*** ./node_modules/@boots-edu/webz/notifier.js ***!
+  \**************************************************/
+/***/ ((__unused_webpack_module, exports) => {
+
+"use strict";
+
+Object.defineProperty(exports, "__esModule", ({ value: true }));
+exports.Notifier = void 0;
+/**
+ * Notifier
+ * @description A class for creating events
+ * @export
+ * @class Notifier
+ * @group Async Event Sources
+ */
+class Notifier {
+    constructor() {
+        this.refCount = 0;
+        this.callbacks = [];
+        this.errorFns = [];
+    }
+    /**
+     * Subscribe to the event
+     * @param callback The callback to call when the event is triggered
+     * @param error The callback to call when an error is triggered
+     * @returns The id of the subscription
+     * @example
+     * const event = new Notifier<number>();
+     * const id = event.subscribe((value:number) => {
+     *  console.log(value);
+     * });
+     * event.notify(1);
+     * event.unsubscribe(id);
+     */
+    subscribe(callback, error) {
+        this.callbacks.push({ id: this.refCount, fn: callback });
+        if (error)
+            this.errorFns.push({ id: this.refCount, fn: error });
+        return this.refCount++;
+    }
+    /**
+     * Unsubscribe from the event
+     * @param id The id of the subscription to remove
+     * @returns void
+     * @example
+     * const event = new Notifier<number>();
+     * const id = event.subscribe((value:number) => {
+     *   console.log(value);
+     * });
+     * event.notify(1);
+     * event.unsubscribe(id);
+     */
+    unsubscribe(id) {
+        this.callbacks = this.callbacks.filter((cb) => cb.id !== id);
+        this.errorFns = this.errorFns.filter((cb) => cb.id !== id);
+    }
+    /**
+     * Trigger the event
+     * @param value The value to pass to the callback
+     * @returns void
+     * @example
+     * const event = new Notifier<number>();
+     * const id = event.subscribe((value:number) => {
+     *   console.log(value);
+     * });
+     * event.notify(1);
+     * event.unsubscribe(id);
+     * @deprecated Use notify instead
+     */
+    next(value) {
+        for (const callback of this.callbacks)
+            callback.fn(value);
+    }
+    /**
+     * Trigger the event
+     * @param value The value to pass to the callback
+     * @returns void
+     * @example
+     * const event = new Notifier<number>();
+     * const id = event.subscribe((value:number) => {
+     *   console.log(value);
+     * });
+     * event.notify(1);
+     * event.unsubscribe(id);
+     */
+    notify(value) {
+        this.next(value);
+    }
+    /**
+     * Trigger the error event event
+     * @param value The value to pass to the callback
+     * @returns void
+     * @example
+     * const event = new Notifier<number>();
+     * const id = event.subscribe((value:number) => {
+     *   console.log(value);
+     * }, (error) => {
+     *  console.error(error);
+     * });
+     * event.error(new Error("It doesnt't work!"));
+     * event.unsubscribe(id);
+     */
+    error(value) {
+        for (const errorFn of this.errorFns)
+            errorFn.fn(value);
+    }
+    /**
+     * Convert the event to a promise
+     * @description Convert the event to a promise.
+     * This is useful for the async/await style async pattern.
+     * @returns Promise<T>
+     * @example
+     * async myFunction() {
+     *   const result=await WebzDialog.popup(
+     *     "Hello World",
+     *     "Alert", ["Ok","Cancel"]).toPromise();
+     *   console.log(result);
+     * }
+     */
+    toPromise() {
+        return new Promise((resolve, reject) => {
+            this.subscribe((value) => {
+                resolve(value);
+            }, (error) => {
+                reject(error);
+            });
+        });
+    }
+}
+exports.Notifier = Notifier;
 
 
 /***/ }),
@@ -2744,7 +2760,7 @@ const utils_1 = __webpack_require__(/*! ../utils */ "./src/app/objects/utils.ts"
  * @class
  * @extends WebzComponent
 
- * @property {EventSubject<GameStatus>} gameOver - The game over event
+ * @property {Notifier<GameStatus>} gameOver - The game over event
  */
 let LanderComponent = (() => {
     var _a;
@@ -2980,11 +2996,11 @@ let LanderComponent = (() => {
                 this.flying = (__runInitializers(this, __showLander_extraInitializers), false);
                 /**
                  * @description The game over event
-                 * @type {EventSubject<GameStatus>}
+                 * @type {Notifier<GameStatus>}
                  * @private
                  * @memberof LanderComponent
                  */
-                this.gameOver = new webz_1.EventSubject();
+                this.gameOver = new webz_1.Notifier();
                 this.position = { x: 50, y: 50 };
             }
             /**
@@ -3160,7 +3176,7 @@ let LanderComponent = (() => {
             stopFlying(stopType) {
                 this.flying = false;
                 this.hud.status = stopType;
-                this.gameOver.next(stopType);
+                this.gameOver.notify(stopType);
             }
             /**
              * @description Gets the altitude above the terrain at a given x position

@@ -1,7 +1,7 @@
 import {
     BindCSSClass,
     Click,
-    EventSubject,
+    Notifier,
     WebzComponent,
     WebzDialog,
     Timer,
@@ -17,7 +17,7 @@ import guid from "guid";
  * @description Top level component of the task list.
  * @class TasksComponent
  * @extends {WebzComponent}
- * @property {EventSubject<TaskData[]>} saveData - event subject for the save event.  emits the task data when the save event is triggered.
+ * @property {Notifier<TaskData[]>} saveData - event subject for the save event.  emits the task data when the save event is triggered.
  * @memberof TasksComponent
  */
 export class TasksComponent extends WebzComponent {
@@ -36,13 +36,13 @@ export class TasksComponent extends WebzComponent {
     /**
      * @description Event subject for the save event.  emits the task data when the save event is triggered.
      * @memberof TasksComponent
-     * @type {EventSubject<TaskData[]>}
+     * @type {Notifier<TaskData[]>}
      * @example
      * this.saveData.subscribe((data) => {
      *    console.log(data);
      * });
      */
-    saveData: EventSubject<TaskData[]> = new EventSubject<TaskData[]>();
+    saveData: Notifier<TaskData[]> = new Notifier<TaskData[]>();
 
     /**
      * @description Extracts the task data for the component from the task lines.
@@ -134,14 +134,14 @@ export class TasksComponent extends WebzComponent {
                         this.removeComponent(task);
                     });
                     this.taskLines = [];
-                    this.saveData.next(this.taskData);
+                    this.saveData.notify(this.taskData);
                 }
             });
         }
     }
 
     /**
-     * @description Connects the taskLine EventSubjects to the TasksComponent.
+     * @description Connects the taskLine Notifiers to the TasksComponent.
      * @memberof TasksComponent
      * @method onDeleteAllTasks
      * @param {TasklineComponent} line - the task line to connect the events to.
@@ -165,7 +165,7 @@ export class TasksComponent extends WebzComponent {
         line.lineDelete.subscribe(() => {
             this.removeComponent(line);
             this.taskLines.splice(this.taskLines.indexOf(line), 1);
-            this.saveData.next(this.taskData);
+            this.saveData.notify(this.taskData);
         });
 
         //if we are closing editor, then we want to enable the add button and all child edit/cancel buttons
@@ -179,7 +179,7 @@ export class TasksComponent extends WebzComponent {
                     line.data.uniqueID = guid.create();
                 }
                 //save the data to a datasource
-                this.saveData.next(this.taskData);
+                this.saveData.notify(this.taskData);
             } else if (line.data.uniqueID === undefined) {
                 this.removeComponent(line);
                 this.taskLines.splice(this.taskLines.indexOf(line), 1);
