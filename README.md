@@ -10,7 +10,7 @@ To get started, install the Webz command line interface.
 npm install -g @boots-edu/webz-cli
 ```
 
-Once installed, you can use the `Webz` command to create a new web application and to add components to an existing one.
+Once installed, you can use the `webz` command to create a new web application and to add components to an existing one.
 >Note: You may need to run this command with sudo on Unix/Linux/Mac:
 ```sudo npm install -g @boots-edu/webz-cli```
 
@@ -19,7 +19,7 @@ Once installed, you can use the `Webz` command to create a new web application a
 Go to the parent directory of where you want your new application and issue the command.
 
 ```
-Webz new <project name>
+webz new <project name>
 ```
 
 where **project name** is the name you want to use for your new project. Webz will set up your project directory and install necessary dependencies. When it completes, you can access the project folder
@@ -32,10 +32,10 @@ and open your project in your favorite IDE.
 
 ## Creating a new component for your website
 
-At the command line, navigate to the src/app folder (or a subfolder if you built more structure) and issue the Webz component command
+At the command line, navigate to the src/app folder (or a subfolder if you built more structure) and issue the webz component command
 
 ```
-Webz component <componentName>
+webz component <componentName>
 ```
 
 where **componentName** is the component to create. This will create the following files:
@@ -86,9 +86,7 @@ When you first create a site, it contains a single component called MainComponen
 <div id="user-count"></div>
 <button id="increment-btn">Click Me</button>
 ```
-
 -   Write css to style your html
-
 ```
 #user-count{
 	font-weight:bold;
