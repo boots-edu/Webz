@@ -2,7 +2,7 @@
 
 ## Getting Started
 
-Webz is a simple to use framework for developing web applications in typescript. Webz uses _webpack_ to create a single html and javascript file ready for deployment.  Webz is a major component of the BOOTS (Beginner Object Oriented Programming in Typescript) curriculum.
+Webz is a simple to use framework for developing web applications in typescript. Webz uses _webpack_ to create a single html and javascript file ready for deployment.  Webz is a major component of the BOOTS (Beginner Object Oriented TypeScript) curriculum.
 
 To get started, install the Webz command line interface.
 
