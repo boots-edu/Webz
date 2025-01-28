@@ -651,15 +651,15 @@ event:Notifier<boolean> = new Notifier<boolean>();
 event.notify(true);
 ```
 
-## Working example program
-A fully working example can be found here: 
-[https://boots-edu.github.io/Webz/example](https://boots-edu.github.io/Webz/example)
+## Working Example Programs
 
-Another here:
-[https://boots-edu.github.io/Webz/webpong](https://boots-edu.github.io/Webz/webpong)
+Here are some fully working examples of Boots applications:
 
-And my personal favorite:
-[https://boots-edu.github.io/Webz/lander](https://boots-edu.github.io/Webz/lander)
+| Program             | Demo                                        | Source                                                             |
+|---------------------|---------------------------------------------|--------------------------------------------------------------------|
+| Task List Editor    | <https://boots-edu.github.io/Webz/example/> | <https://github.com/boots-edu/Webz/tree/main/examples/webz-task>   |
+| Pong (game)         | <https://boots-edu.github.io/Webz/webpong/> | <https://github.com/boots-edu/Webz/tree/main/examples/webz-pong>   |
+| Space Lander (game) | <https://boots-edu.github.io/Webz/lander/>  | <https://github.com/boots-edu/Webz/tree/main/examples/webz-lander> |
 
 All of these were created with Webz without accessing any DOM elements directly.
 
